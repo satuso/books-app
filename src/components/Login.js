@@ -35,9 +35,9 @@ const Login = () => {
   const auth = getAuth()
   const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault()
-    await signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const signedInUser = userCredential.user
         console.log(signedInUser)

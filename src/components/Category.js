@@ -16,7 +16,7 @@ const Category = ({ category }) => {
   return (
     <>
       <h2>Books in {category}</h2>
-      {filteredBooks.map(book => <BookLink key={book.id} to={`${book.id}`}>{book.authors.map(author => author + " ")}: {book.title} <AverageRating book={book}/></BookLink>)}
+      {filteredBooks.map(book => <BookLink key={book.id} to={`${book.id}`}><p>{book.authors.map(author => author + " ")}: {book.title} <AverageRating book={book}/></p></BookLink>)}
     </>
   )
 }

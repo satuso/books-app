@@ -7,7 +7,6 @@ import Books from "./components/Books"
 import styled from "styled-components"
 import Login from "./components/Login"
 import SignUp from "./components/SignUp"
-import Profile from "./components/Profile"
 import Book from "./components/Book"
 import Search from "./components/Search"
 import Home from "./components/Home"
@@ -38,8 +37,8 @@ const App = () => {
 
   return (
     <Container>
-      <Header />
-      <Nav />
+      <Header/>
+      <Nav/>
       <Wrapper>
         <Routes>
           <Route exact path="*" element={<Home />}></Route>
@@ -50,9 +49,8 @@ const App = () => {
           <Route path="/search" element={<Search />}></Route>
           <Route path="/users" element={<Users />}></Route>
           {books.map(book => <Route key={book.id} path={`/categories/:category/${book.id}`} element={<Book book={book}/>}></Route>)}
+          {books?.map(book => book.categories?.map(category => <Route key={book.id} path={`/categories/${replacePath(category)}`} element={<Category category={category}/>}></Route>))}
           {users && users.map(user => <Route key={user.id} path={`/users/${user.id}`} element={<User user={user}/>}></Route>)}
-          {books?.map(book => book.categories?.map(category => <Route key={user.id} path={`/categories/${replacePath(category)}`} element={<Category category={category}/>}></Route>))}
-          <Route path="/profile" element={<Profile />}></Route>
           <Route path="/edit-profile" element={<EditProfileForm user={user}/>}></Route>
         </Routes>
       </Wrapper>

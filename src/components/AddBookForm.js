@@ -3,32 +3,11 @@ import axios from "axios"
 import { collection, addDoc } from "firebase/firestore"
 import { db } from "../config"
 import { Context } from "../context"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
+import SearchForm from "./SearchForm"
 import styled from "styled-components"
 
 const Wrapper = styled.div`
   text-align: center;
-`
-
-const Input = styled.input`
-  outline: none;
-  padding: 0.5em;
-  margin: 0.5em;
-  color: tomato;
-  background: white;
-  border: 1px solid gray;
-  border-radius: 3px;
-  width: 300px;
-`
-
-const Button = styled.button`
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  color: dodgerblue;
-  font-weight: bold;
-  font-size: 1rem;
 `
 
 const AddBookForm = () => {
@@ -68,11 +47,11 @@ const AddBookForm = () => {
       console.log("book already in db")
     } else {
       await addDoc(booksCollectionRef, {
-        title: bookMatch[index]?.volumeInfo.title,
-        authors: bookMatch[index]?.volumeInfo.authors ? bookMatch[index]?.volumeInfo.authors : "",
-        description: bookMatch[index]?.volumeInfo.description ? bookMatch[index]?.volumeInfo.title : "",
+        title: bookMatch[index]?.volumeInfo.title ? bookMatch[index]?.volumeInfo.title : "Untitled",
+        authors: bookMatch[index]?.volumeInfo.authors ? bookMatch[index]?.volumeInfo.authors : "Unknown Author",
+        description: bookMatch[index]?.volumeInfo.description ? bookMatch[index]?.volumeInfo.description : "No description",
         publishedDate: bookMatch[index]?.volumeInfo.publishedDate,
-        isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier,
+        isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier ? bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier : "No ISBN",
         image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? bookMatch[0]?.volumeInfo.imageLinks.thumbnail : null,
         categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : [],
         reviews: [],
@@ -87,19 +66,12 @@ const AddBookForm = () => {
 
   return (
     <Wrapper>
-      <form onSubmit={submitSearch} className='form search-form'>
-        <h2>Search Google Books</h2>
-        <Input
-          type='text'
-          placeholder='Search'
-          onFocus={(e) => e.target.placeholder = ""}
-          onBlur={(e) => e.target.placeholder = "Search"}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        >
-        </Input>
-        <Button aria-label="Search"><FontAwesomeIcon icon={faMagnifyingGlass}/></Button>
-      </form>
+      <h2>Search Google Books</h2>
+      <SearchForm 
+        submitSearch={submitSearch}
+        search={search}
+        setSearch={setSearch}
+      />
       {bookMatch && bookMatch.map((book, index) => <p key={index}>{book.volumeInfo.authors?.map(author => author + " ")}: {book.volumeInfo.title} <button onClick={() => addBook(index)}>Add to database</button></p>)}
     </Wrapper>
   )

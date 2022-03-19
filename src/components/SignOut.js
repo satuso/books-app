@@ -20,8 +20,8 @@ const SignOut = () => {
   const auth = getAuth()
   const navigate = useNavigate()
   
-  const handleSignOut = async () => {
-    await signOut(auth).then(() => {
+  const handleSignOut = () => {
+    signOut(auth).then(() => {
       console.log("signed out")
       navigate("/")
     }).catch((error) => {

@@ -39,19 +39,19 @@ const SignUp = () => {
   const auth = getAuth()
   const navigate = useNavigate()
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault()
     if (password === confirmPassword){
       const regex = /[^a-zA-Z0-9-._]/g
       if (username.match(regex)){
         console.log("Usernames may only contain letters (A-Z), numbers (0-9) and symbols (- . _)")
       } else {
-        await createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredentials) => {
-            updateProfile(auth.currentUser, {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            updateProfile(auth.currentUser, { 
               displayName: username
             })
-            const loggedInUser = userCredentials.user
+            const loggedInUser = userCredential.user
             setDoc(doc(db, "users", loggedInUser.uid), {
               displayName: username,
               email: email,

@@ -79,7 +79,7 @@ const Book = ({ book }) => {
     }
   }
 
-  const username = user.displayName
+  const username = user?.displayName
   if (!book) return null
 
   return (
@@ -93,7 +93,7 @@ const Book = ({ book }) => {
           <p>ISBN: {book.isbn}</p>
           <p>Category: {book.categories?.map(category => <CategoryLink to={`/categories/${replacePath(category)}`} key={category}>{category}</CategoryLink>)}</p>
           {user && <AddButton onClick={addToFavorites} aria-label="Add to Favorites">❤️</AddButton>}
-          {book.user.displayName === username && <DeleteButton onClick={deleteBook} aria-label="Delete Book">🗑</DeleteButton>}
+          {user && book.user.displayName === username && <DeleteButton onClick={deleteBook} aria-label="Delete Book">🗑</DeleteButton>}
           <h3>Reviews</h3>
           {book.reviews && book.reviews.map((review, index) => <p key={index}>{review.user}: {review.review} <Rating review={review}/> {review.date}</p>)}
         </div>
