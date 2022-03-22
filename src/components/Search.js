@@ -1,7 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
+import { Context } from "../context.js"
 import { Link } from "react-router-dom"
 import AverageRating from "./AverageRating"
 import SearchForm from "./SearchForm"
+import BookItem from "./BookItem"
 import styled from "styled-components"
 
 const Wrapper = styled.div`
@@ -14,25 +16,27 @@ const BookLink = styled(Link)`
   font-weight: bold;
 `
 
-const Search = ({ books }) => {
+const Search = () => {
+  const { books } = useContext(Context)
   const [filter, setFilter] = useState("")
   const [search, setSearch] = useState("")
 
-  const booksCopy = [...books]
-
   const filterByValue = (array, string) => {
-    return array.filter(o => Object.keys(o).some(k => o[k].toString().toLowerCase().includes(string.toString().toLowerCase())))
+    if (books){
+      return array.filter(o =>
+        Object.keys(o).some(k => String(o[k]).toLowerCase().includes(string.toLowerCase())))
+    }
   }
 
   const submitSearch = (e) => {
     e.preventDefault()
     setFilter(search)
-    filterByValue(booksCopy, filter)
+    filterByValue(books, filter)
     setSearch("")
   }
 
-  const filteredBooks = filter ? filterByValue(booksCopy, filter) : []
-  
+  const filteredBooks = filter ? filterByValue(books, filter) : []
+
   return (
     <Wrapper>
       <h2>Search Books</h2>
@@ -43,7 +47,7 @@ const Search = ({ books }) => {
       />
       {filteredBooks.map(book => 
         <div key={book.id}>
-          <p><BookLink to={`${book.id}`}>{book.authors.map(author => author + " ")}: {book.title} <AverageRating book={book}/></BookLink></p>
+          <p><BookLink to={`/categories/${book.categories}/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></BookLink></p>
         </div>
       )}
     </Wrapper>

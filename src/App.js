@@ -35,8 +35,6 @@ const App = () => {
   const { users } = useContext(Context)
   const { user } = useContext(Context)
 
-  console.log(users, books)
-
   return (
     <Container>
       <Header/>

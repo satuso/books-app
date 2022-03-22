@@ -1,13 +1,6 @@
 import React from "react"
-import { Link } from "react-router-dom"
 import { replacePath } from "../helpers"
-import styled from "styled-components"
-
-const CategoryLink = styled(Link)`
-  color: #262626;
-  text-decoration: none;
-  font-weight: bold;
-`
+import {  StyledLink } from "../theme"
 
 const Categories = ({ books }) => {
   const list = []
@@ -15,7 +8,9 @@ const Categories = ({ books }) => {
   const categories = [...new Set(list)].sort()
 
   return (
-    <>{categories.map(category => <CategoryLink to={`/categories/${replacePath(category)}`} key={category}><p>{category}</p></CategoryLink>)}</>
+    <>
+      {categories.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}><p>{category}</p></StyledLink>)}
+    </>
   )
 }
 

@@ -1,48 +1,14 @@
 import React, { useContext } from "react"
-import { Link } from "react-router-dom"
-import BookItem from "./BookItem"
-import Rating from "./Rating"
 import { Context } from "../context"
 import { doc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore"
 import { getAuth, deleteUser } from "firebase/auth"
 import { db } from "../config"
-import styled from "styled-components"
 import Favorite from "./Favorite"
-
-const UserDiv = styled.div`
-  color: #262626;
-  text-decoration: none;
-`
-
-const BookLink = styled(Link)`
-  color: #262626;
-  text-decoration: none;
-  font-weight: bold;
-`
-
-const UpdateButton = styled(Link)`
-  cursor: pointer;
-  background: dodgerblue;
-  border-radius: 3px;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  margin-right: 5px;
-  font-size: .8rem;
-  text-decoration: none;
-  font-family: Arial, sans-serif;
-`
-
-const DeleteButton = styled.button`
-  cursor: pointer;
-  background: tomato;
-  border-radius: 3px;
-  border: none;
-  color: white;
-  font-size: .8rem;
-  padding: 10px 15px;
-  font-family: Arial, sans-serif;
-`
+import BookItem from "./BookItem"
+import Rating from "./Rating"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { StyledLink, UserDiv, StyledButton, EditLink, Avatar, Wrapper } from "../theme"
 
 const User = ({ user }) => {
   const auth = getAuth()
@@ -57,7 +23,8 @@ const User = ({ user }) => {
       book: {
         id: book.id,
         title: book.title,
-        authors: book.authors
+        authors: book.authors,
+        categories: book.categories
       },
       date: userReviews,
       id: book.id,
@@ -81,22 +48,25 @@ const User = ({ user }) => {
   }
   return (
     <UserDiv>
-      <p>Username: {user.displayName}</p>
-      <p>Name: {user.name}</p>
-      <p>Date of Birth: {user.dateOfBirth}</p>
+      <Wrapper>
+        <Avatar src={user.photoURL} alt="avatar" />
+        <p><b>{user.displayName}</b></p>
+        <p>{user.name}</p>
+        <p>{user.dateOfBirth}</p>
+      </Wrapper>
       <p>Favorites:</p>
       <ul>
-        {user.favorites.map(book => <li key={book.id}><BookLink to={`/categories/${book.category}/${book.id}`}><BookItem book={book}/></BookLink><Favorite book={book}/></li>)} 
+        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.book.id}><StyledLink to={`/categories/${favorite.book.categories}/${favorite.book.id}`}><BookItem book={favorite.book}/></StyledLink><Favorite book={favorite.book}/></li>) : "No favorites"} 
       </ul>
       <p>Reviews:</p>
       <ul>
-        {user.reviews.map(book => <li key={book.id}><BookLink to={`/categories/${book.category}/${book.book.id}`}><BookItem book={book.book}/></BookLink> <Rating review={book}/></li>)}
+        {user.reviews.length > 0 ? user.reviews.map(review => <li key={review.book.id}><StyledLink to={`/categories/${review.book.categories}/${review.book.id}`}><BookItem book={review.book}/></StyledLink> <Rating review={review}/></li>) : "No reviews"}
       </ul>
       {loggedInUser && user.displayName === loggedInUser.displayName &&
-      <>
-        <UpdateButton to="/edit-profile">Edit Profile</UpdateButton>
-        <DeleteButton onClick={removeUser}>Delete User</DeleteButton>
-      </>
+      <Wrapper>
+        <EditLink to="/edit-profile" aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
+        <StyledButton onClick={removeUser} aria-label="Delete profile"><FontAwesomeIcon icon={faTrash}/></StyledButton>
+      </Wrapper>
       }
     </UserDiv>
   )

@@ -1,34 +1,9 @@
 import React, { useState } from "react"
-import styled from "styled-components"
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { doc, setDoc } from "firebase/firestore"
 import { db } from "../config"
-
-const Wrapper = styled.div`
-  text-align: center;
-`
-
-const Input = styled.input`
-  outline: none;
-  padding: 0.5em;
-  margin: 0.5em;
-  color: tomato;
-  background: white;
-  border: 1px solid gray;
-  border-radius: 3px;
-  width: 300px;
-`
-
-const Button = styled.button`
-  cursor: pointer;
-  background: dodgerblue;
-  border-radius: 3px;
-  border: none;
-  color: white;
-  margin: 0 0em 5px 0em;
-  padding: 0.5em 1em;
-`
+import { Input, Button, Form } from "../theme"
 
 const SignUp = () => {
   const [username, setUsername] = useState("")
@@ -49,12 +24,14 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             updateProfile(auth.currentUser, { 
-              displayName: username
+              displayName: username,
+              photoURL: "https://firebasestorage.googleapis.com/v0/b/library-979fa.appspot.com/o/blank_avatar.png?alt=media&token=4b94fed2-9b51-419c-b827-2d9ecd311c56"
             })
             const loggedInUser = userCredential.user
             setDoc(doc(db, "users", loggedInUser.uid), {
               displayName: username,
               email: email,
+              photoURL: "https://firebasestorage.googleapis.com/v0/b/library-979fa.appspot.com/o/blank_avatar.png?alt=media&token=4b94fed2-9b51-419c-b827-2d9ecd311c56",
               name: "",
               dateOfBirth: "",
               reviews: [],
@@ -74,44 +51,42 @@ const SignUp = () => {
   }
 
   return (
-    <Wrapper>
-      <form onSubmit={handleSignUp}>
-        <h2>Sign Up</h2>
-        <Input
-          type="username"
-          placeholder="Username"
-          value={username}
-          onChange={({target}) => setUsername(target.value)}
-          minLength={3}
-          maxLength={20}
-          required
-        /><br/>
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={({target}) => setEmail(target.value)}
-          required
-        /><br/>
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={({target}) => setPassword(target.value)}
-          minLength={8}
-          required
-        /><br/>
-        <Input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={({target}) => setConfirmPassword(target.value)}
-          minLength={8}
-          required
-        /><br/>
-        <Button type='submit'>Sign Up</Button>
-      </form>
-    </Wrapper>
+    <Form onSubmit={handleSignUp}>
+      <h2>Sign Up</h2>
+      <Input
+        type="username"
+        placeholder="Username"
+        value={username}
+        onChange={({target}) => setUsername(target.value)}
+        minLength={3}
+        maxLength={20}
+        required
+      /><br/>
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={({target}) => setEmail(target.value)}
+        required
+      /><br/>
+      <Input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={({target}) => setPassword(target.value)}
+        minLength={8}
+        required
+      /><br/>
+      <Input
+        type="password"
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChange={({target}) => setConfirmPassword(target.value)}
+        minLength={8}
+        required
+      /><br/>
+      <Button type='submit'>Sign Up</Button>
+    </Form>
   )
 }
 

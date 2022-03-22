@@ -1,36 +1,8 @@
 import React, { useState, useContext } from "react"
 import { doc, updateDoc, arrayUnion } from "firebase/firestore"
 import { db } from "../config"
-import styled from "styled-components"
 import { Context } from "../context"
-
-const Input = styled.input`
-  outline: none;
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-  color: tomato;
-  background: white;
-  border: 1px solid gray;
-  border-radius: 3px;
-  width: 300px;
-`
-
-const Button = styled.button`
-  cursor: pointer;
-  background: dodgerblue;
-  border-radius: 3px;
-  border: none;
-  color: white;
-  margin: 5px 0 5px 0;
-  padding: 0.5em 1em;
-`
-
-const ReviewDiv = styled.div`
-  color: #262626;
-  text-decoration: none;
-  padding-left: 10px;
-  margin-top: 0;
-`
+import { ReviewDiv, Input, Button } from "../theme"
 
 const ReviewForm = ({ book }) => {
   const [newReview, setNewReview] = useState("")
@@ -60,7 +32,8 @@ const ReviewForm = ({ book }) => {
           book: {
             id: book.id,
             title: book.title,
-            authors: book.authors
+            authors: book.authors,
+            categories: book.categories
           },
           id: book.id
         }

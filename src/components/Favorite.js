@@ -4,16 +4,7 @@ import { Context } from "../context.js"
 import { doc, updateDoc, arrayUnion, getDoc, arrayRemove } from "firebase/firestore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faHeartCirclePlus, faHeartCircleMinus } from "@fortawesome/free-solid-svg-icons"
-import styled from "styled-components"
-
-const FavoriteButton = styled.button`
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  color: tomato;
-  font-size: 1.2rem;
-  font-weight: bold;
-`
+import { FavoriteButton } from "../theme"
 
 const Favorite = ({ book }) => {
   const { user } = useContext(Context)

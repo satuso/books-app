@@ -1,9 +1,5 @@
 import React from "react"
-import styled from "styled-components"
-
-const Color = styled.span`
-  color: gold;
-`
+import { Star } from "../theme"
 
 const AverageRating = ({ book }) => {
   const getAverage = () => {
@@ -15,7 +11,7 @@ const AverageRating = ({ book }) => {
     }
   }
   return (
-    <Color>{getAverage()}</Color>
+    <Star>{getAverage()}</Star>
   )
 }
 export default AverageRating
