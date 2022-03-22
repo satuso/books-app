@@ -10,8 +10,12 @@ const CategoryLink = styled(Link)`
 `
 
 const Categories = ({ books }) => {
+  const list = []
+  books?.map(book => book.categories?.map(category => list.push(category)))
+  const categories = [...new Set(list)].sort()
+
   return (
-    <>{books?.map(book => book.categories?.map(category => <CategoryLink to={`/categories/${replacePath(category)}`} key={category}><p>{category}</p></CategoryLink>))}</>
+    <>{categories.map(category => <CategoryLink to={`/categories/${replacePath(category)}`} key={category}><p>{category}</p></CategoryLink>)}</>
   )
 }
 

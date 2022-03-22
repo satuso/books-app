@@ -48,12 +48,12 @@ const AddBookForm = () => {
     } else {
       await addDoc(booksCollectionRef, {
         title: bookMatch[index]?.volumeInfo.title ? bookMatch[index]?.volumeInfo.title : "Untitled",
-        authors: bookMatch[index]?.volumeInfo.authors ? bookMatch[index]?.volumeInfo.authors : "Unknown Author",
+        authors: bookMatch[index]?.volumeInfo.authors ? bookMatch[index]?.volumeInfo.authors : ["Unknown Author"],
         description: bookMatch[index]?.volumeInfo.description ? bookMatch[index]?.volumeInfo.description : "No description",
         publishedDate: bookMatch[index]?.volumeInfo.publishedDate,
         isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier ? bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier : "No ISBN",
         image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? bookMatch[0]?.volumeInfo.imageLinks.thumbnail : null,
-        categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : [],
+        categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : ["Uncategorized"],
         reviews: [],
         user: {
           id: user.uid,
@@ -61,6 +61,18 @@ const AddBookForm = () => {
         }
       })
       console.log("added book from google books")
+    }
+  }
+
+  function getAuthors(arr) {
+    if (arr === undefined){
+      return "Unknown Author"
+    }
+    if (arr.length > 1){
+      const result = arr.slice(0, -1).join(", ") + " and " + arr.slice(-1)
+      return result
+    } else {
+      return arr
     }
   }
 
@@ -72,7 +84,7 @@ const AddBookForm = () => {
         search={search}
         setSearch={setSearch}
       />
-      {bookMatch && bookMatch.map((book, index) => <p key={index}>{book.volumeInfo.authors?.map(author => author + " ")}: {book.volumeInfo.title} <button onClick={() => addBook(index)}>Add to database</button></p>)}
+      {bookMatch && bookMatch.map((book, index) => <p key={index}>{getAuthors(book.volumeInfo.authors)}: {book.volumeInfo.title} <button onClick={() => addBook(index)}>Add to database</button></p>)}
     </Wrapper>
   )
 }

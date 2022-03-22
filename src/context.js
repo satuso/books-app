@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { getAuth } from "firebase/auth"
 import { db } from "./config"
-import { collection, onSnapshot } from "firebase/firestore"
+import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
 
 export const Context = React.createContext()
 
@@ -15,6 +15,7 @@ export const ContextProvider = ({ children }) => {
 
   const [users, setUsers] = useState(null)
   const [books, setBooks] = useState([])
+  const [userMatch, setUserMatch] = useState([])
 
   useEffect(() => {
     const getUsers = () => {
@@ -36,7 +37,22 @@ export const ContextProvider = ({ children }) => {
     getBooks()
   }, [])
 
+  useEffect(() =>{
+    const getUserMatch = async () => {
+      if (user){
+        const docRef = doc(db, "users", user.uid)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          setUserMatch({...docSnap.data(), id: user.uid})
+        } else {
+          console.log("No such document!")
+        }
+      }
+    }
+    getUserMatch()
+  }, [user])
+
   return (
-    <Context.Provider value={{ user, users, books }}>{children}</Context.Provider>
+    <Context.Provider value={{ user, users, books, userMatch }}>{children}</Context.Provider>
   )
 }

@@ -44,7 +44,7 @@ const Header = () => {
       <StyledLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/'>Books.</StyledLink>
       <div>
         {user && 
-        <><LoggedIn className={({ isActive }) => (isActive ? "active" : "inactive")} to={`/users/${user.uid}`}>{user.displayName ? user.displayName : user.email}</LoggedIn> is signed in <SignOut/></>}
+        <><LoggedIn className={({ isActive }) => (isActive ? "active" : "inactive")} to={`/users/${user.displayName}`}>{user.displayName ? user.displayName : user.email}</LoggedIn> is signed in <SignOut/></>}
       </div>
     </Wrapper>
   )

@@ -8,12 +8,13 @@ const UserLink = styled(Link)`
   text-decoration: none;
   font-weight: bold;
 `
+
 const Users = () => {
   const { users } = useContext(Context)
 
   return (
     <div>
-      {users && users.map(user => <UserLink key={user.id} to={`/users/${user.id}`}><p>{user.displayName}</p></UserLink>)}
+      {users && users.map(user => <UserLink key={user.id} to={`/users/${user.displayName}`}><p>{user.displayName}</p></UserLink>)}
     </div>
   )
 }

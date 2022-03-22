@@ -1,11 +1,13 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import BookItem from "./BookItem"
 import Rating from "./Rating"
-import { doc, deleteDoc } from "firebase/firestore"
+import { Context } from "../context"
+import { doc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore"
 import { getAuth, deleteUser } from "firebase/auth"
 import { db } from "../config"
 import styled from "styled-components"
+import Favorite from "./Favorite"
 
 const UserDiv = styled.div`
   color: #262626;
@@ -46,11 +48,32 @@ const User = ({ user }) => {
   const auth = getAuth()
   const loggedInUser = auth.currentUser
 
+  const { books } = useContext(Context)
+  const book = books.filter(book => book.reviews.user === user.uid)
+  const userReviews = book.reviews?.filter(review => review.user === user?.displayName)
+
   const removeUser = () => {
+    const reviewObject = {
+      book: {
+        id: book.id,
+        title: book.title,
+        authors: book.authors
+      },
+      date: userReviews,
+      id: book.id,
+      rating: userReviews,
+      review: userReviews,
+      user: user.displayName
+    }
+    const bookFields = {
+      reviews: arrayRemove(reviewObject)
+    }
+    const bookDoc = doc(db, "books", book.id)
+    updateDoc(bookDoc, bookFields)
     deleteDoc(doc(db, "users", user.uid))
       .then(() => {
         deleteUser(loggedInUser)
-        console.log("Deleted user")
+        console.log("Deleted user and their reviews from books")
       })
       .catch((error) => {
         console.log(error)
@@ -63,13 +86,13 @@ const User = ({ user }) => {
       <p>Date of Birth: {user.dateOfBirth}</p>
       <p>Favorites:</p>
       <ul>
-        {user.favorites.map(book => <li key={book.id}><BookLink to={`/books/${book.id}`}><BookItem book={book}/></BookLink> ❤️</li>)} 
+        {user.favorites.map(book => <li key={book.id}><BookLink to={`/categories/${book.category}/${book.id}`}><BookItem book={book}/></BookLink><Favorite book={book}/></li>)} 
       </ul>
       <p>Reviews:</p>
       <ul>
-        {user.reviews.map(book => <li key={book.id}><BookLink to={`/books/${book.id}`}><BookItem book={book}/></BookLink> <Rating review={book}/></li>)}
+        {user.reviews.map(book => <li key={book.id}><BookLink to={`/categories/${book.category}/${book.book.id}`}><BookItem book={book.book}/></BookLink> <Rating review={book}/></li>)}
       </ul>
-      {user.displayName === loggedInUser.displayName &&
+      {loggedInUser && user.displayName === loggedInUser.displayName &&
       <>
         <UpdateButton to="/edit-profile">Edit Profile</UpdateButton>
         <DeleteButton onClick={removeUser}>Delete User</DeleteButton>

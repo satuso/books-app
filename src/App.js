@@ -35,6 +35,8 @@ const App = () => {
   const { users } = useContext(Context)
   const { user } = useContext(Context)
 
+  console.log(users, books)
+
   return (
     <Container>
       <Header/>
@@ -50,7 +52,7 @@ const App = () => {
           <Route path="/users" element={<Users />}></Route>
           {books.map(book => <Route key={book.id} path={`/categories/:category/${book.id}`} element={<Book book={book}/>}></Route>)}
           {books?.map(book => book.categories?.map(category => <Route key={book.id} path={`/categories/${replacePath(category)}`} element={<Category category={category}/>}></Route>))}
-          {users && users.map(user => <Route key={user.id} path={`/users/${user.id}`} element={<User user={user}/>}></Route>)}
+          {users && users.map(user => <Route key={user.id} path={`/users/${user.displayName}`} element={<User user={user}/>}></Route>)}
           <Route path="/edit-profile" element={<EditProfileForm user={user}/>}></Route>
         </Routes>
       </Wrapper>

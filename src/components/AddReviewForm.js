@@ -61,22 +61,14 @@ const ReviewForm = ({ book }) => {
             id: book.id,
             title: book.title,
             authors: book.authors
-          }
+          },
+          id: book.id
         }
-        const bookFields = {
+        const reviewFields = {
           reviews: arrayUnion(reviewObject)
         }
-        const bookObject = {
-          id: book.id,
-          title: book.title,
-          authors: book.authors,
-          rating: newRating
-        }
-        const userFields = {
-          reviews: arrayUnion(bookObject)
-        }
-        await updateDoc(bookDoc, bookFields)
-        await updateDoc(userDoc, userFields)
+        await updateDoc(bookDoc, reviewFields)
+        await updateDoc(userDoc, reviewFields)
         console.log("added book review", book.id)
       } else {
         console.log("please select rating")
