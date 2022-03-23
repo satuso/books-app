@@ -1,6 +1,35 @@
 import styled from "styled-components"
 import { Link, NavLink } from "react-router-dom"
 
+export const HeaderWrapper = styled.div`
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+export const StyledHeaderLink = styled(Link)`
+  font-size: 2em;
+  text-align: center;
+  color: #262626;
+  text-transform: uppercase;
+  font-family: Georgia, Times, serif;
+  margin: 0;
+  padding: .8em;
+  font-weight: bold;
+  text-decoration: none;
+`
+
+export const LoggedIn = styled(NavLink)`
+  color: #262626;
+  font-weight: bold;
+  text-decoration: none;
+  transition: .3s;
+`
+
 export const Wrapper = styled.div`
   text-align: center;
 `
@@ -11,7 +40,7 @@ export const Form = styled.form`
 
 export const Input = styled.input`
   outline: none;
-  padding: 0.5em;
+  padding: 0.8em;
   margin-bottom: 0.5em;
   color: tomato;
   background: white;
@@ -52,6 +81,7 @@ export const FavoriteButton = styled.button`
   color: tomato;
   font-size: 1.2rem;
   font-weight: bold;
+  transition: .3s;
 
   &:hover {
     color: dodgerblue;
@@ -66,6 +96,7 @@ export const StyledButton = styled.button`
   color: gray;
   font-size: 1.2rem;
   margin-right: 10px;
+  transition: .3s;
 
   &:hover {
     color: dodgerblue;
@@ -119,6 +150,7 @@ export const StyledLink = styled(Link)`
   color: #262626;
   text-decoration: none;
   font-weight: bold;
+  transition: .3s;
 
   &:hover {
     color: dodgerblue;
@@ -153,6 +185,9 @@ export const StyledNavLink = styled(NavLink)`
   padding: 10px;
 
   &.active {
+    color: tomato;
+  }
+  &:hover {
     color: tomato;
   }
 `

@@ -32,6 +32,7 @@ const Book = ({ book }) => {
           id: book.id,
           title: book.title,
           authors: book.authors,
+          categories: book.categories
         },
         date: userReview[0].date,
         id: book.id,
@@ -39,20 +40,17 @@ const Book = ({ book }) => {
         review: userReview[0].review,
         user: userReview[0].user
       }
-      const reviewFields = {
-        reviews: arrayRemove(reviewObject)
-      }
-      await updateDoc(userDoc, reviewFields)
-
       const favoriteObject = {
         id: book.id,
         title: book.title,
-        authors: book.authors
+        authors: book.authors,
+        categories: book.categories
       }
-      const favoriteFields = {
+      const fields = {
+        reviews: arrayRemove(reviewObject),
         favorites: arrayRemove(favoriteObject)
       }
-      await updateDoc(userDoc, favoriteFields)
+      await updateDoc(userDoc, fields)
       console.log("deleted book", book.id, "from database and user's favorites and reviews")
     }
   }

@@ -1,20 +1,9 @@
 import React, { useState, useContext } from "react"
 import { Context } from "../context.js"
-import { Link } from "react-router-dom"
 import AverageRating from "./AverageRating"
 import SearchForm from "./SearchForm"
 import BookItem from "./BookItem"
-import styled from "styled-components"
-
-const Wrapper = styled.div`
-  text-align: center;
-`
-
-const BookLink = styled(Link)`
-  color: #262626;
-  text-decoration: none;
-  font-weight: bold;
-`
+import { StyledLink, Wrapper } from "../theme"
 
 const Search = () => {
   const { books } = useContext(Context)
@@ -47,7 +36,7 @@ const Search = () => {
       />
       {filteredBooks.map(book => 
         <div key={book.id}>
-          <p><BookLink to={`/categories/${book.categories}/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></BookLink></p>
+          <p><StyledLink to={`/categories/${book.categories}/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></StyledLink></p>
         </div>
       )}
     </Wrapper>

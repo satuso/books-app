@@ -4,11 +4,9 @@ import { collection, addDoc } from "firebase/firestore"
 import { db } from "../config"
 import { Context } from "../context"
 import SearchForm from "./SearchForm"
-import styled from "styled-components"
-
-const Wrapper = styled.div`
-  text-align: center;
-`
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons"
+import { StyledButton, Wrapper } from "../theme"
 
 const AddBookForm = () => {
   const [filter, setFilter] = useState("")
@@ -84,7 +82,7 @@ const AddBookForm = () => {
         search={search}
         setSearch={setSearch}
       />
-      {bookMatch && bookMatch.map((book, index) => <p key={index}>{getAuthors(book.volumeInfo.authors)}: {book.volumeInfo.title} <button onClick={() => addBook(index)}>Add to database</button></p>)}
+      {bookMatch && bookMatch.map((book, index) => <p key={index}>{getAuthors(book.volumeInfo.authors)}: {book.volumeInfo.title} <StyledButton onClick={() => addBook(index)} aria-label="Add to database"><FontAwesomeIcon icon={faCirclePlus}/></StyledButton></p>)}
     </Wrapper>
   )
 }

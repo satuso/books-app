@@ -1,51 +1,47 @@
-import React, { useContext } from "react"
-import { Context } from "../context"
-import { doc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore"
-import { getAuth, deleteUser } from "firebase/auth"
+import React, { useState }  from "react"
+import { doc, deleteDoc } from "firebase/firestore"
+import { getAuth, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "firebase/auth"
 import { db } from "../config"
 import Favorite from "./Favorite"
 import BookItem from "./BookItem"
 import Rating from "./Rating"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons"
-import { StyledLink, UserDiv, StyledButton, EditLink, Avatar, Wrapper } from "../theme"
+import { StyledLink, UserDiv, StyledButton, EditLink, Avatar, Wrapper, Form, Input, Button } from "../theme"
 
 const User = ({ user }) => {
+  const [password, setPassword] = useState("")
+  const [toggle, setToggle] = useState(false)
+  
   const auth = getAuth()
   const loggedInUser = auth.currentUser
-
-  const { books } = useContext(Context)
-  const book = books.filter(book => book.reviews.user === user.uid)
-  const userReviews = book.reviews?.filter(review => review.user === user?.displayName)
-
-  const removeUser = () => {
-    const reviewObject = {
-      book: {
-        id: book.id,
-        title: book.title,
-        authors: book.authors,
-        categories: book.categories
-      },
-      date: userReviews,
-      id: book.id,
-      rating: userReviews,
-      review: userReviews,
-      user: user.displayName
-    }
-    const bookFields = {
-      reviews: arrayRemove(reviewObject)
-    }
-    const bookDoc = doc(db, "books", book.id)
-    updateDoc(bookDoc, bookFields)
-    deleteDoc(doc(db, "users", user.uid))
+  
+  const handleAuth = async (e) => {
+    e.preventDefault()
+    const credential = EmailAuthProvider.credential(
+      loggedInUser.email,
+      password
+    )
+    reauthenticateWithCredential(loggedInUser, credential)
       .then(() => {
-        deleteUser(loggedInUser)
-        console.log("Deleted user and their reviews from books")
-      })
-      .catch((error) => {
+        console.log("user reauthenticated")
+        setToggle(false)
+        removeUser()
+      }).catch((error) => {
         console.log(error)
       })
   }
+
+  const removeUser = () => {
+    deleteUser(loggedInUser)
+      .then(() => {
+        deleteDoc(doc(db, "users", user.id))
+        console.log("Deleted user")
+      }).catch((error) => {
+        console.log(error)
+      })
+  }
+
   return (
     <UserDiv>
       <Wrapper>
@@ -56,7 +52,7 @@ const User = ({ user }) => {
       </Wrapper>
       <p>Favorites:</p>
       <ul>
-        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.book.id}><StyledLink to={`/categories/${favorite.book.categories}/${favorite.book.id}`}><BookItem book={favorite.book}/></StyledLink><Favorite book={favorite.book}/></li>) : "No favorites"} 
+        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.id}><StyledLink to={`/categories/${favorite.categories}/${favorite.id}`}><BookItem book={favorite}/></StyledLink><Favorite book={favorite}/></li>) : "No favorites"} 
       </ul>
       <p>Reviews:</p>
       <ul>
@@ -65,9 +61,21 @@ const User = ({ user }) => {
       {loggedInUser && user.displayName === loggedInUser.displayName &&
       <Wrapper>
         <EditLink to="/edit-profile" aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
-        <StyledButton onClick={removeUser} aria-label="Delete profile"><FontAwesomeIcon icon={faTrash}/></StyledButton>
+        <StyledButton onClick={() => setToggle(true)} aria-label="Delete profile"><FontAwesomeIcon icon={faTrash}/></StyledButton>
       </Wrapper>
       }
+      {toggle &&     
+      <Form onSubmit={handleAuth}>
+        <h2>Re-Authenticate</h2>
+        <p>Please provide password to delete profile</p>
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={({target}) => setPassword(target.value)}
+        /><br/>
+        <Button type='submit'>Reauthenticate</Button>
+      </Form>}
     </UserDiv>
   )
 }

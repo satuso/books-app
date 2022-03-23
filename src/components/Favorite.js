@@ -19,7 +19,8 @@ const Favorite = ({ book }) => {
       const bookObject = {
         id: book.id,
         title: book.title,
-        authors: book.authors
+        authors: book.authors,
+        categories: book.categories
       }
       const newFields = {
         favorites: arrayUnion(bookObject)
@@ -33,7 +34,8 @@ const Favorite = ({ book }) => {
     const bookObject = {
       id: book.id,
       title: book.title,
-      authors: book.authors
+      authors: book.authors,
+      categories: book.categories
     }
     const newFields = {
       favorites: arrayRemove(bookObject)
