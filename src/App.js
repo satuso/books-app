@@ -4,7 +4,6 @@ import { Routes, Route } from "react-router-dom"
 import Header from "./components/Header"
 import Nav from "./components/Nav"
 import Books from "./components/Books"
-import styled from "styled-components"
 import Login from "./components/Login"
 import SignUp from "./components/SignUp"
 import Book from "./components/Book"
@@ -17,31 +16,23 @@ import AddBookForm from "./components/AddBookForm"
 import EditProfileForm from "./components/EditProfileForm"
 import Category from "./components/Category"
 import { replacePath } from "./helpers"
-
-const Container = styled.div`
-  min-height: 100vh;
-`
-
-const Wrapper = styled.section`
-  margin: 1em;
-  padding: 1em;
-  width: 50%;
-  margin: 0 auto;
-  min-height: 55vh;
-`
+import { Container, PageWrapper, Notification } from "./theme"
+import NotFoundPage from "./components/NotFoundPage"
 
 const App = () => {
   const { books } = useContext(Context)
   const { users } = useContext(Context)
   const { user } = useContext(Context)
+  const { message } = useContext(Context)
 
   return (
     <Container>
       <Header/>
       <Nav/>
-      <Wrapper>
+      <PageWrapper>
+        <Notification>{message ? message : ""}</Notification>
         <Routes>
-          <Route exact path="*" element={<Home />}></Route>
+          <Route exact path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/books" element={<Books />}></Route>
@@ -52,8 +43,9 @@ const App = () => {
           {books?.map(book => book.categories?.map(category => <Route key={book.id} path={`/categories/${replacePath(category)}`} element={<Category category={category}/>}></Route>))}
           {users && users.map(user => <Route key={user.id} path={`/users/${user.displayName}`} element={<User user={user}/>}></Route>)}
           <Route path="/edit-profile" element={<EditProfileForm user={user}/>}></Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </Wrapper>
+      </PageWrapper>
       <Footer/>
     </Container>
   )

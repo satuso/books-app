@@ -15,43 +15,45 @@ import { BookDiv, BookDetails, StyledButton, Average, StyledLink, BookImage } fr
 
 const Book = ({ book }) => {
   const { user } = useContext(Context)
-  const { users } = useContext(Context)
+  const { notification } = useContext(Context)
+
   const userReview = book.reviews?.filter(review => review.user === user?.displayName)
-  const bookReview = users.map(user => user.reviews?.filter(review => review.book.id === book.id))
-  console.log(bookReview)
 
   const username = user?.displayName
 
   const deleteBook = async () => {
-    if (window.confirm("Are you sure you want to delete this book?")){
-      await deleteDoc(doc(db, "books", book.id))
-      const userDoc = doc(db, "users", user.uid)
-      
-      const reviewObject = {
-        book: {
+    try {
+      if (window.confirm("Are you sure you want to delete this book?")){
+        await deleteDoc(doc(db, "books", book.id))
+        const userDoc = doc(db, "users", user.uid)
+        const reviewObject = {
+          book: {
+            id: book.id,
+            title: book.title,
+            authors: book.authors,
+            categories: book.categories
+          },
+          date: userReview[0].date,
+          id: book.id,
+          rating: userReview[0].rating,
+          review: userReview[0].review,
+          user: userReview[0].user
+        }
+        const favoriteObject = {
           id: book.id,
           title: book.title,
           authors: book.authors,
           categories: book.categories
-        },
-        date: userReview[0].date,
-        id: book.id,
-        rating: userReview[0].rating,
-        review: userReview[0].review,
-        user: userReview[0].user
+        }
+        const fields = {
+          reviews: arrayRemove(reviewObject),
+          favorites: arrayRemove(favoriteObject)
+        }
+        await updateDoc(userDoc, fields)
+        notification("Deleted book from database")
       }
-      const favoriteObject = {
-        id: book.id,
-        title: book.title,
-        authors: book.authors,
-        categories: book.categories
-      }
-      const fields = {
-        reviews: arrayRemove(reviewObject),
-        favorites: arrayRemove(favoriteObject)
-      }
-      await updateDoc(userDoc, fields)
-      console.log("deleted book", book.id, "from database and user's favorites and reviews")
+    } catch (error) {
+      notification(error.message.toString())
     }
   }
 

@@ -9,6 +9,7 @@ const ReviewForm = ({ book }) => {
   const [newRating, setNewRating] = useState(0)
 
   const { user } = useContext(Context)
+  const { notification } = useContext(Context)
 
   const convertDate = (date) => {
     const day = date.split("T")
@@ -18,35 +19,39 @@ const ReviewForm = ({ book }) => {
 
   const addReview = async (e) => {
     e.preventDefault()
-    const bookDoc = doc(db, "books", book.id)
-    const userDoc = doc(db, "users", user.uid)
-    if (book.reviews?.find(review => review.user === user.displayName)){
-      console.log("book has already been reviewed")
-    } else {
-      if (newRating > 0 && newRating <= 5){
-        const reviewObject = {
-          user: user.displayName, 
-          review: newReview,
-          rating: newRating,
-          date: convertDate(new Date().toISOString()),
-          book: {
-            id: book.id,
-            title: book.title,
-            authors: book.authors,
-            categories: book.categories
-          },
-          id: book.id
-        }
-        const reviewFields = {
-          reviews: arrayUnion(reviewObject)
-        }
-        await updateDoc(bookDoc, reviewFields)
-        await updateDoc(userDoc, reviewFields)
-        console.log("added book review", book.id)
+    try {
+      const bookDoc = doc(db, "books", book.id)
+      const userDoc = doc(db, "users", user.uid)
+      if (book.reviews?.find(review => review.user === user.displayName)){
+        notification("You have already reviewed this book")
       } else {
-        console.log("please select rating")
+        if (newRating > 0 && newRating <= 5){
+          const reviewObject = {
+            user: user.displayName, 
+            review: newReview,
+            rating: newRating,
+            date: convertDate(new Date().toISOString()),
+            book: {
+              id: book.id,
+              title: book.title,
+              authors: book.authors,
+              categories: book.categories
+            },
+            id: book.id
+          }
+          const reviewFields = {
+            reviews: arrayUnion(reviewObject)
+          }
+          await updateDoc(bookDoc, reviewFields)
+          await updateDoc(userDoc, reviewFields)
+          notification("Added book review")
+        } else {
+          notification("Please select rating")
+        }
       }
-    }
+    } catch (error) {
+      notification(error.message.toString())
+    }      
   }
 
   return (

@@ -15,6 +15,7 @@ const AddBookForm = () => {
 
   const { user } = useContext(Context)
   const { books } = useContext(Context)
+  const { notification } = useContext(Context)
 
   const booksCollectionRef = collection(db, "books")
 
@@ -28,10 +29,12 @@ const AddBookForm = () => {
           if (res.status === 200){
             setBookMatch(res.data.items.map(book => book))
           } else {
-            console.log("no results")
+            notification("No results", 10)
           }
         })
-        .catch(error=> console.log(error))
+        .catch(error =>
+          notification(error.message.toString(), 10)
+        )
     }
   }, [filter])
 
@@ -41,24 +44,28 @@ const AddBookForm = () => {
   }
 
   const addBook = async (index) => {
-    if (books.find(book => book.isbn === bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier)){
-      console.log("book already in db")
-    } else {
-      await addDoc(booksCollectionRef, {
-        title: bookMatch[index]?.volumeInfo.title ? bookMatch[index]?.volumeInfo.title : "Untitled",
-        authors: bookMatch[index]?.volumeInfo.authors ? bookMatch[index]?.volumeInfo.authors : ["Unknown Author"],
-        description: bookMatch[index]?.volumeInfo.description ? bookMatch[index]?.volumeInfo.description : "No description",
-        publishedDate: bookMatch[index]?.volumeInfo.publishedDate,
-        isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier ? bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier : "No ISBN",
-        image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? bookMatch[0]?.volumeInfo.imageLinks.thumbnail : null,
-        categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : ["Uncategorized"],
-        reviews: [],
-        user: {
-          id: user.uid,
-          displayName: user.displayName
-        }
-      })
-      console.log("added book from google books")
+    try {
+      if (books.find(book => book.isbn === bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier)){
+        notification("Book is already in database", 10)
+      } else {
+        await addDoc(booksCollectionRef, {
+          title: bookMatch[index]?.volumeInfo.title ? bookMatch[index]?.volumeInfo.title : "Untitled",
+          authors: bookMatch[index]?.volumeInfo.authors ? bookMatch[index]?.volumeInfo.authors : ["Unknown Author"],
+          description: bookMatch[index]?.volumeInfo.description ? bookMatch[index]?.volumeInfo.description : "No description",
+          publishedDate: bookMatch[index]?.volumeInfo.publishedDate,
+          isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier ? bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier : "No ISBN",
+          image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? bookMatch[0]?.volumeInfo.imageLinks.thumbnail : null,
+          categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : ["Uncategorized"],
+          reviews: [],
+          user: {
+            id: user.uid,
+            displayName: user.displayName
+          }
+        })
+        notification("Added book to database", 10)
+      }
+    } catch (error) {
+      notification(error.message.toString())
     }
   }
 

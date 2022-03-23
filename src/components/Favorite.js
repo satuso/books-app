@@ -8,14 +8,35 @@ import { FavoriteButton } from "../theme"
 
 const Favorite = ({ book }) => {
   const { user } = useContext(Context)
+  const { notification } = useContext(Context)
 
   const addToFavorites = async () => {
-    const userDoc = doc(db, "users", user.uid)
-    const docSnap = await getDoc(userDoc)
-    const userData = docSnap.data()
-    if (userData.books?.includes(book.id)){
-      console.log("book already in list")
-    } else {
+    try {
+      const userDoc = doc(db, "users", user.uid)
+      const docSnap = await getDoc(userDoc)
+      const userData = docSnap.data()
+      if (userData.books?.includes(book.id)){
+        notification("Book is already in favorites")
+      } else {
+        const bookObject = {
+          id: book.id,
+          title: book.title,
+          authors: book.authors,
+          categories: book.categories
+        }
+        const newFields = {
+          favorites: arrayUnion(bookObject)
+        }
+        await updateDoc(userDoc, newFields)
+        notification("Added book to favorites")
+      }
+    } catch (error) {
+      notification(error.message.toString())
+    }
+  }
+
+  const removeFromFavorites = async () => {
+    try {
       const bookObject = {
         id: book.id,
         title: book.title,
@@ -23,26 +44,14 @@ const Favorite = ({ book }) => {
         categories: book.categories
       }
       const newFields = {
-        favorites: arrayUnion(bookObject)
+        favorites: arrayRemove(bookObject)
       }
+      const userDoc = doc(db, "users", user.uid)
       await updateDoc(userDoc, newFields)
-      console.log("added book", book.id, "to favorites")
+      notification("Removed book from favorites")
+    } catch (error) {
+      notification(error.message.toString())
     }
-  }
-
-  const removeFromFavorites = async () => {
-    const bookObject = {
-      id: book.id,
-      title: book.title,
-      authors: book.authors,
-      categories: book.categories
-    }
-    const newFields = {
-      favorites: arrayRemove(bookObject)
-    }
-    const userDoc = doc(db, "users", user.uid)
-    await updateDoc(userDoc, newFields)
-    console.log("removed book", book.id, "from favorites")
   }
 
   return (

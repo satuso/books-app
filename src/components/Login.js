@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
+import { Context } from "../context"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { Input, Button, Form } from "../theme"
@@ -6,6 +7,8 @@ import { Input, Button, Form } from "../theme"
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const { notification } = useContext(Context)
 
   const auth = getAuth()
   const navigate = useNavigate()
@@ -15,13 +18,11 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const signedInUser = userCredential.user
-        console.log(signedInUser)
+        notification(`${signedInUser.displayName} logged in successfully`)
         navigate("/")
       })
       .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-        console.log(errorCode, errorMessage)
+        notification(error.message.toString())
       })
   }
 

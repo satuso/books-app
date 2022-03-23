@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useContext } from "react"
+import { Context } from "../context"
 import { getAuth, signOut } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -19,13 +20,14 @@ const Button = styled.button`
 const SignOut = () => {
   const auth = getAuth()
   const navigate = useNavigate()
+  const { notification } = useContext(Context)
   
   const handleSignOut = () => {
     signOut(auth).then(() => {
-      console.log("signed out")
+      notification("Signed out succesfully")
       navigate("/")
     }).catch((error) => {
-      console.log(error)
+      notification(error.message.toString())
     })
   }
   return (

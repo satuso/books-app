@@ -9,6 +9,7 @@ const Categories = ({ books }) => {
 
   return (
     <>
+      <h3>Categories</h3>
       {categories.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}><p>{category}</p></StyledLink>)}
     </>
   )

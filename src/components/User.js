@@ -1,4 +1,6 @@
-import React, { useState }  from "react"
+import React, { useState, useContext }  from "react"
+import { Context } from "../context"
+import { useNavigate } from "react-router-dom"
 import { doc, deleteDoc } from "firebase/firestore"
 import { getAuth, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "firebase/auth"
 import { db } from "../config"
@@ -13,6 +15,9 @@ const User = ({ user }) => {
   const [password, setPassword] = useState("")
   const [toggle, setToggle] = useState(false)
   
+  const { notification } = useContext(Context)
+
+  const navigate = useNavigate()
   const auth = getAuth()
   const loggedInUser = auth.currentUser
   
@@ -24,11 +29,12 @@ const User = ({ user }) => {
     )
     reauthenticateWithCredential(loggedInUser, credential)
       .then(() => {
-        console.log("user reauthenticated")
+        notification("Re-authenticated successfully")
         setToggle(false)
         removeUser()
-      }).catch((error) => {
-        console.log(error)
+      })
+      .catch((error) => {
+        notification(error.message.toString())
       })
   }
 
@@ -36,9 +42,11 @@ const User = ({ user }) => {
     deleteUser(loggedInUser)
       .then(() => {
         deleteDoc(doc(db, "users", user.id))
-        console.log("Deleted user")
-      }).catch((error) => {
-        console.log(error)
+        notification("Deleted user successfully")
+        navigate("/")
+      })
+      .catch((error) => {
+        notification(error.message.toString())
       })
   }
 
@@ -49,6 +57,7 @@ const User = ({ user }) => {
         <p><b>{user.displayName}</b></p>
         <p>{user.name}</p>
         <p>{user.dateOfBirth}</p>
+        {loggedInUser && user.displayName === loggedInUser.displayName &&<p>{loggedInUser.email}</p>}
       </Wrapper>
       <p>Favorites:</p>
       <ul>
@@ -66,15 +75,15 @@ const User = ({ user }) => {
       }
       {toggle &&     
       <Form onSubmit={handleAuth}>
-        <h2>Re-Authenticate</h2>
-        <p>Please provide password to delete profile</p>
+        <h2>Delete account</h2>
+        <p>Please provide your password to permanently delete your account</p>
         <Input
           type="password"
           placeholder="Password"
           value={password}
           onChange={({target}) => setPassword(target.value)}
         /><br/>
-        <Button type='submit'>Reauthenticate</Button>
+        <Button type='submit'>Delete account</Button>
       </Form>}
     </UserDiv>
   )

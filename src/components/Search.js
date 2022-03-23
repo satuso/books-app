@@ -6,9 +6,10 @@ import BookItem from "./BookItem"
 import { StyledLink, Wrapper } from "../theme"
 
 const Search = () => {
-  const { books } = useContext(Context)
   const [filter, setFilter] = useState("")
   const [search, setSearch] = useState("")
+
+  const { books } = useContext(Context)
 
   const filterByValue = (array, string) => {
     if (books){
@@ -27,19 +28,21 @@ const Search = () => {
   const filteredBooks = filter ? filterByValue(books, filter) : []
 
   return (
-    <Wrapper>
-      <h2>Search Books</h2>
-      <SearchForm 
-        submitSearch={submitSearch}
-        search={search}
-        setSearch={setSearch}
-      />
+    <>
+      <Wrapper>
+        <h2>Search Books</h2>
+        <SearchForm 
+          submitSearch={submitSearch}
+          search={search}
+          setSearch={setSearch}
+        />
+      </Wrapper>
+      {filter && <h3>Search Results</h3>}
+      {(filteredBooks.length === 0 && filter) && "No results"}
       {filteredBooks.map(book => 
-        <div key={book.id}>
-          <p><StyledLink to={`/categories/${book.categories}/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></StyledLink></p>
-        </div>
+        <p key={book.id}><StyledLink to={`/categories/${book.categories}/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></StyledLink></p>
       )}
-    </Wrapper>
+    </>
   )
 }
 

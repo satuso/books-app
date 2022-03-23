@@ -1,6 +1,24 @@
 import styled from "styled-components"
 import { Link, NavLink } from "react-router-dom"
 
+export const Container = styled.div`
+  min-height: 100vh;
+  background-color: #fafafa;
+`
+
+export const PageWrapper = styled.section`
+  margin: 1em;
+  padding: 1em;
+  width: 50%;
+  margin: 0 auto;
+  min-height: 55vh;
+`
+export const Notification = styled.p`
+  text-align: center;
+  color: teal;
+  font-weight: bold;
+`
+
 export const HeaderWrapper = styled.div`
   width: 100%;
   padding: 0;
@@ -49,6 +67,7 @@ export const Input = styled.input`
   border-radius: 10px;
   width: 300px;
   letter-spacing: 1px;
+  font-weight: bold;
   transition: .3s;
 
   &:hover {
@@ -63,9 +82,10 @@ export const Button = styled.button`
   border: none;
   color: black;
   font-family: Arial, sans-serif;
-  padding: 0.6em 1em;
+  padding: 0.7em 1.1em;
   margin: .5em 0 .5em 0;
   text-transform: uppercase;
+  font-weight: bold;
   transition: .3s;
 
   &:hover {
@@ -197,4 +217,19 @@ export const ReviewDiv = styled.div`
   text-decoration: none;
   padding-left: 10px;
   margin-top: 0;
+`
+
+export const FooterWrapper = styled.div`
+  background-color: whitesmoke;
+  width: 100%;
+  margin-bottom: 0;
+  bottom: 0;
+`
+
+export const FooterText = styled.p`
+  text-align: center;
+  margin: 0;
+  padding: 4em;
+  color: gray;
+  font-size: .8rem;
 `

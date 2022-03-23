@@ -7,6 +7,7 @@ export const Context = React.createContext()
 
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     const auth = getAuth()
@@ -52,7 +53,15 @@ export const ContextProvider = ({ children }) => {
     getUserMatch()
   }, [user])
 
+  const notification = (message) => {
+    return setMessage(message), 
+    setTimeout(() => {
+      setMessage(null)
+    }, 10000)
+
+  }
+
   return (
-    <Context.Provider value={{ user, users, books, userMatch }}>{children}</Context.Provider>
+    <Context.Provider value={{ user, users, books, userMatch, message, notification }}>{children}</Context.Provider>
   )
 }

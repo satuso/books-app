@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useState, useContext }  from "react"
+import { Context } from "../context"
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { doc, setDoc } from "firebase/firestore"
@@ -11,6 +12,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
 
+  const { notification } = useContext(Context)
+
   const auth = getAuth()
   const navigate = useNavigate()
 
@@ -19,7 +22,7 @@ const SignUp = () => {
     if (password === confirmPassword){
       const regex = /[^a-zA-Z0-9-._]/g
       if (username.match(regex)){
-        console.log("Usernames may only contain letters (A-Z), numbers (0-9) and symbols (- . _)")
+        notification("Usernames can contain only letters (A-Z), numbers (0-9) and symbols (- . _)")
       } else {
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
@@ -30,23 +33,21 @@ const SignUp = () => {
             const loggedInUser = userCredential.user
             setDoc(doc(db, "users", loggedInUser.uid), {
               displayName: username,
-              email: email,
               photoURL: "https://firebasestorage.googleapis.com/v0/b/library-979fa.appspot.com/o/blank_avatar.png?alt=media&token=4b94fed2-9b51-419c-b827-2d9ecd311c56",
               name: "",
               dateOfBirth: "",
               reviews: [],
               favorites: []
             })
+            notification("Signed up successfully")
             navigate("/")
           })
           .catch((error) => {
-            const errorCode = error.code
-            const errorMessage = error.message
-            console.log(errorCode, errorMessage)
+            notification(error.message.toString())
           })
       }
     } else {
-      console.log("passwords must match")
+      notification("Passwords must match")
     }
   }
 
