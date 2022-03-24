@@ -7,16 +7,11 @@ const Nav = () => {
 
   return (
     <Navbar>
-      <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/users'>Users</StyledNavLink>
       <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/books'>Books</StyledNavLink>
-      {user ?
+      {user &&
         <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/addbook'>Add Book</StyledNavLink>
-        :
-        <>
-          <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/login'>Login</StyledNavLink>
-          <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/signup'>Sign Up</StyledNavLink>
-        </>
       }
+      <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/users'>Users</StyledNavLink>
     </Navbar>
   )
 }

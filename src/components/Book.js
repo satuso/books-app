@@ -57,6 +57,10 @@ const Book = ({ book }) => {
     }
   }
 
+  const converLink = (link) => {
+    return link.replace("http", "https")
+  }
+
   if (!book) return null
 
   return (
@@ -75,7 +79,7 @@ const Book = ({ book }) => {
           {book.reviews && book.reviews.map((review, index) => <Review key={index} review={review} book={book}/>)}
           {book.reviews.length === 0 && "No reviews"}
         </BookDetails>
-        {book.image && <BookImage src={book.image} alt='book'/>}
+        {book.image && <BookImage src={converLink(book.image)} alt='book'/>}
       </BookDiv>
       {user && <AddReviewForm book={book} />}
       <GoBack/>
