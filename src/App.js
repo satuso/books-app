@@ -42,7 +42,7 @@ const App = () => {
           {books.map(book => <Route key={book.id} path={`/categories/:category/${book.id}`} element={<Book book={book}/>}></Route>)}
           {books?.map(book => book.categories?.map(category => <Route key={book.id} path={`/categories/${replacePath(category)}`} element={<Category category={category}/>}></Route>))}
           {users && users.map(user => <Route key={user.id} path={`/users/${user.displayName}`} element={<User user={user}/>}></Route>)}
-          <Route path="/edit-profile" element={<EditProfileForm user={user}/>}></Route>
+          {user && <Route path={`/${user.displayName}/edit-profile`} element={<EditProfileForm user={user}/>}></Route>}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </PageWrapper>

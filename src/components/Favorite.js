@@ -3,7 +3,7 @@ import { db } from "../config"
 import { Context } from "../context.js"
 import { doc, updateDoc, arrayUnion, getDoc, arrayRemove } from "firebase/firestore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faHeartCirclePlus, faHeartCircleMinus } from "@fortawesome/free-solid-svg-icons"
+import { faHeartCircleMinus, faHeartCirclePlus } from "@fortawesome/free-solid-svg-icons"
 import { FavoriteButton } from "../theme"
 
 const Favorite = ({ book }) => {
@@ -15,7 +15,8 @@ const Favorite = ({ book }) => {
       const userDoc = doc(db, "users", user.uid)
       const docSnap = await getDoc(userDoc)
       const userData = docSnap.data()
-      if (userData.books?.includes(book.id)){
+      const userFavorites = userData.favorites.filter(favorite => favorite.id === book.id)
+      if (userFavorites.some(favorite => favorite.id === book.id)){
         notification("Book is already in favorites")
       } else {
         const bookObject = {
@@ -57,15 +58,14 @@ const Favorite = ({ book }) => {
   return (
     <>
       {user &&
-      <>
-        <FavoriteButton onClick={() => {
-          addToFavorites()
-        }} aria-label="Add to Favorites"><FontAwesomeIcon icon={faHeartCirclePlus}/></FavoriteButton>
-      
-        <FavoriteButton onClick={() => {
-          removeFromFavorites()
-        }} aria-label="Remove from Favorites"><FontAwesomeIcon icon={faHeartCircleMinus}/></FavoriteButton>
-      </>
+        <>
+          <FavoriteButton onClick={() => {
+            addToFavorites()
+          }} aria-label="Add to Favorites"><FontAwesomeIcon icon={faHeartCirclePlus}/></FavoriteButton>
+          <FavoriteButton onClick={() => {
+            removeFromFavorites()
+          }} aria-label="Remove from Favorites"><FontAwesomeIcon icon={faHeartCircleMinus}/></FavoriteButton>
+        </>
       }
     </>
   )

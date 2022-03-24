@@ -3,6 +3,7 @@ import { Context } from "../context"
 import { useNavigate } from "react-router-dom"
 import { doc, deleteDoc } from "firebase/firestore"
 import { getAuth, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "firebase/auth"
+import { getStorage, ref, deleteObject } from "firebase/storage"
 import { db } from "../config"
 import Favorite from "./Favorite"
 import BookItem from "./BookItem"
@@ -32,7 +33,6 @@ const User = ({ user }) => {
     )
     reauthenticateWithCredential(loggedInUser, credential)
       .then(() => {
-        notification("Re-authenticated successfully")
         setToggle(false)
         removeUser()
       })
@@ -42,6 +42,9 @@ const User = ({ user }) => {
   }
 
   const removeUser = () => {
+    const storage = getStorage()
+    const avatarRef = ref(storage, loggedInUser.uid)
+    deleteObject(avatarRef)
     deleteUser(loggedInUser)
       .then(() => {
         userReviews.forEach(element => deleteDoc(doc(db, "reviews", element.id)))
@@ -53,6 +56,8 @@ const User = ({ user }) => {
         notification(error.message.toString())
       })
   }
+
+  if (!user) return null
 
   return (
     <UserDiv>
@@ -73,11 +78,11 @@ const User = ({ user }) => {
       </ul>
       {loggedInUser && user.displayName === loggedInUser.displayName &&
       <Wrapper>
-        <EditLink to="/edit-profile" aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
+        <EditLink to={`/${user.displayName}/edit-profile`} aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
         <StyledButton onClick={() => setToggle(true)} aria-label="Delete profile"><FontAwesomeIcon icon={faTrash}/></StyledButton>
       </Wrapper>
       }
-      {toggle &&     
+      {toggle &&
       <Form onSubmit={handleAuth}>
         <h2>Delete account</h2>
         <p>Please provide your password to permanently delete your account</p>

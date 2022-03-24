@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react"
 import { getAuth } from "firebase/auth"
 import { db } from "./config"
-import { collection, onSnapshot, doc, getDoc } from "firebase/firestore"
+import { collection, onSnapshot } from "firebase/firestore"
 
 export const Context = React.createContext()
 
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
+  const [users, setUsers] = useState([])
+  const [books, setBooks] = useState([])
+  const [reviews, setReviews] = useState([])
 
   useEffect(() => {
     const auth = getAuth()
     auth.onAuthStateChanged(setUser)
   }, [])
-
-  const [users, setUsers] = useState(null)
-  const [books, setBooks] = useState([])
-  const [reviews, setReviews] = useState([])
-  const [userMatch, setUserMatch] = useState([])
 
   useEffect(() => {
     const getUsers = () => {
@@ -39,7 +37,6 @@ export const ContextProvider = ({ children }) => {
     getBooks()
   }, [])
 
-  
   useEffect(() => {
     const getReviews = () => {
       onSnapshot(collection(db, "reviews"), res => {
@@ -50,30 +47,14 @@ export const ContextProvider = ({ children }) => {
     getReviews()
   }, [])
 
-  useEffect(() =>{
-    const getUserMatch = async () => {
-      if (user){
-        const docRef = doc(db, "users", user.uid)
-        const docSnap = await getDoc(docRef)
-        if (docSnap.exists()) {
-          setUserMatch({...docSnap.data(), id: user.uid})
-        } else {
-          console.log("No such document!")
-        }
-      }
-    }
-    getUserMatch()
-  }, [user])
-
   const notification = (message) => {
     return setMessage(message), 
     setTimeout(() => {
       setMessage(null)
     }, 10000)
-
   }
 
   return (
-    <Context.Provider value={{ user, users, books, reviews, userMatch, message, notification }}>{children}</Context.Provider>
+    <Context.Provider value={{ user, users, books, reviews, message, notification }}>{children}</Context.Provider>
   )
 }

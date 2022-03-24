@@ -1,14 +1,14 @@
 import React, { useContext } from "react"
 import { Context } from "../context"
-import { StyledLink } from "../theme"
+import { StyledLink, SmallAvatar, UserLinkWrapper } from "../theme"
 
 const Users = () => {
   const { users } = useContext(Context)
 
   return (
-    <div>
-      {users && users.map(user => <StyledLink key={user.id} to={`/users/${user.displayName}`}><p>{user.displayName}</p></StyledLink>)}
-    </div>
+    <>
+      {users && users.map(user => <StyledLink key={user.id} to={`/users/${user.displayName}`}><UserLinkWrapper><SmallAvatar src={user.photoURL} alt={user.displayName}/>{user.displayName}</UserLinkWrapper></StyledLink>)}
+    </>
   )
 }
 

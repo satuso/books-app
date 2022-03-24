@@ -79,6 +79,25 @@ export const Input = styled.input`
   }
 `
 
+export const Textarea = styled.textarea`
+  outline: none;
+  padding: 0.8em;
+  margin-bottom: 0.5em;
+  color: tomato;
+  background: white;
+  font-family: Arial, sans-serif;
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  width: 300px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  transition: .3s;
+
+  &:hover {
+    border-color: lightgray;
+  }
+`
+
 export const Button = styled.button`
   cursor: pointer;
   background: lightgray;
@@ -95,6 +114,23 @@ export const Button = styled.button`
   &:hover {
     background-color: dodgerblue;
     color: white;
+  }
+`
+export const DeleteButton = styled.button`
+  cursor: pointer;
+  background: tomato;
+  border-radius: 10px;
+  border: none;
+  color: black;
+  font-family: Arial, sans-serif;
+  padding: 0.6em 1em;
+  margin: .5em 0 .5em 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: .3s;
+
+  &:hover {
+    background-color: gold;
   }
 `
 
@@ -189,9 +225,22 @@ export const Small = styled.span`
   color: gray;
 `
 
+export const UserLinkWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  margin: 1em;
+`
+
 export const Avatar = styled.img`
   width: 100px;
   height: 100px;
+  border-radius: 50%;
+`
+export const SmallAvatar = styled.img`
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 `
 

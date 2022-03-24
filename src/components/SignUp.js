@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { doc, setDoc } from "firebase/firestore"
 import { db } from "../config"
 import { Input, Button, Form } from "../theme"
+import { getStorage, ref, getDownloadURL } from "firebase/storage"
 
 const SignUp = () => {
   const [username, setUsername] = useState("")
@@ -24,20 +25,23 @@ const SignUp = () => {
       if (username.match(regex)){
         notification("Usernames can contain only letters (A-Z), numbers (0-9) and symbols (- . _)")
       } else {
+        const storage = getStorage()
+        const storageRef = ref(storage, "blank_avatar.png")
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
-            updateProfile(auth.currentUser, { 
-              displayName: username,
-              photoURL: "https://firebasestorage.googleapis.com/v0/b/library-979fa.appspot.com/o/blank_avatar.png?alt=media&token=4b94fed2-9b51-419c-b827-2d9ecd311c56"
-            })
-            const loggedInUser = userCredential.user
-            setDoc(doc(db, "users", loggedInUser.uid), {
-              displayName: username,
-              photoURL: "https://firebasestorage.googleapis.com/v0/b/library-979fa.appspot.com/o/blank_avatar.png?alt=media&token=4b94fed2-9b51-419c-b827-2d9ecd311c56",
-              name: "",
-              dateOfBirth: "",
-              reviews: [],
-              favorites: []
+            getDownloadURL(storageRef).then((url) => {
+              updateProfile(auth.currentUser, { 
+                displayName: username,
+                photoURL: url
+              })
+              const loggedInUser = userCredential.user
+              setDoc(doc(db, "users", loggedInUser.uid), {
+                displayName: username,
+                photoURL: url,
+                name: "",
+                dateOfBirth: "",
+                favorites: []
+              })            
             })
             notification("Signed up successfully")
             navigate("/")

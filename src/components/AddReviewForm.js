@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react"
 import { addDoc, collection } from "firebase/firestore"
 import { db } from "../config"
 import { Context } from "../context"
-import { ReviewDiv, Input, Button } from "../theme"
+import { ReviewDiv, Textarea, Button } from "../theme"
 
 const ReviewForm = ({ book, bookReviews }) => {
   const [newReview, setNewReview] = useState("")
@@ -49,13 +49,13 @@ const ReviewForm = ({ book, bookReviews }) => {
     <ReviewDiv>
       <form onSubmit={addReview}>
         <h3>Review Book</h3>
-        <Input
+        <Textarea
           type="text"
           placeholder="Review"
           value={newReview}
           onChange={({target}) => setNewReview(target.value)}
           minLength={1}
-          maxLength={100}
+          maxLength={1000}
           required
         /><br/>
         <label htmlFor="rating">Rating: </label>
