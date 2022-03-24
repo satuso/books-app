@@ -1,21 +1,13 @@
 import React from "react"
 import books from "../images/books.png"
-import styled from "styled-components"
-
-const Image = styled.img`
-  width: 100%;
-`
-const Text = styled.h2`
-  font-family: Georgia, Times, serif;
-  text-align: center;
-`
+import { Wrapper, HomePageImage } from "../theme"
 
 const Home = () => {
   return (
-    <>
-      <Image src={books}/>
-      <Text>Find Books and Write Book Reviews!</Text>
-    </>
+    <Wrapper>
+      <HomePageImage src={books}/>
+      <h2>Find Books and Write Book Reviews!</h2>
+    </Wrapper>
   )
 }
 

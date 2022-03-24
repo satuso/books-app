@@ -56,7 +56,6 @@ const AddBookForm = () => {
           isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier ? bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier : "No ISBN",
           image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? bookMatch[0]?.volumeInfo.imageLinks.thumbnail : null,
           categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : ["Uncategorized"],
-          reviews: [],
           user: {
             id: user.uid,
             displayName: user.displayName

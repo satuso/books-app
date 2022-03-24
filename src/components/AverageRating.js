@@ -1,11 +1,11 @@
 import React from "react"
 import { Star } from "../theme"
 
-const AverageRating = ({ book }) => {
+const AverageRating = ({ bookReviews }) => {
   const getAverage = () => {
-    if (book.reviews){
-      const sum = book.reviews.map(review => Number(review.rating)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-      const average = sum / book.reviews.length
+    if (bookReviews){
+      const sum = bookReviews.map(review => Number(review.rating)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+      const average = sum / bookReviews.length
       const star = "★"
       return star.repeat(average)
     }

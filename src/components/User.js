@@ -16,6 +16,9 @@ const User = ({ user }) => {
   const [toggle, setToggle] = useState(false)
   
   const { notification } = useContext(Context)
+  const { reviews } = useContext(Context)
+
+  const userReviews = reviews.filter(review => review.userId === user.id)
 
   const navigate = useNavigate()
   const auth = getAuth()
@@ -41,6 +44,7 @@ const User = ({ user }) => {
   const removeUser = () => {
     deleteUser(loggedInUser)
       .then(() => {
+        userReviews.forEach(element => deleteDoc(doc(db, "reviews", element.id)))
         deleteDoc(doc(db, "users", user.id))
         notification("Deleted user successfully")
         navigate("/")
@@ -65,7 +69,7 @@ const User = ({ user }) => {
       </ul>
       <p>Reviews:</p>
       <ul>
-        {user.reviews.length > 0 ? user.reviews.map(review => <li key={review.book.id}><StyledLink to={`/categories/${review.book.categories}/${review.book.id}`}><BookItem book={review.book}/></StyledLink> <Rating review={review}/></li>) : "No reviews"}
+        {userReviews.length > 0 ? userReviews.map(review => <li key={review.bookId}><StyledLink to={`/categories/${review.categories}/${review.bookId}`}><BookItem book={review}/></StyledLink> <Rating review={review}/></li>) : "No reviews"}
       </ul>
       {loggedInUser && user.displayName === loggedInUser.displayName &&
       <Wrapper>

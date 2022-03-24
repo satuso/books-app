@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import { doc, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore"
 import { db } from "../config"
 import { Context } from "../context.js"
@@ -16,29 +17,18 @@ import { BookDiv, BookDetails, StyledButton, Average, StyledLink, BookImage } fr
 const Book = ({ book }) => {
   const { user } = useContext(Context)
   const { notification } = useContext(Context)
+  const { reviews } = useContext(Context)
 
-  const userReview = book.reviews?.filter(review => review.user === user?.displayName)
-
+  const bookReviews = reviews.filter(review => review.bookId === book.id)
   const username = user?.displayName
+  const navigate = useNavigate()
 
   const deleteBook = async () => {
     try {
       if (window.confirm("Are you sure you want to delete this book?")){
         await deleteDoc(doc(db, "books", book.id))
+        bookReviews.forEach(element => deleteDoc(doc(db, "reviews", element.id)))
         const userDoc = doc(db, "users", user.uid)
-        const reviewObject = {
-          book: {
-            id: book.id,
-            title: book.title,
-            authors: book.authors,
-            categories: book.categories
-          },
-          date: userReview[0].date,
-          id: book.id,
-          rating: userReview[0].rating,
-          review: userReview[0].review,
-          user: userReview[0].user
-        }
         const favoriteObject = {
           id: book.id,
           title: book.title,
@@ -46,11 +36,11 @@ const Book = ({ book }) => {
           categories: book.categories
         }
         const fields = {
-          reviews: arrayRemove(reviewObject),
           favorites: arrayRemove(favoriteObject)
         }
         await updateDoc(userDoc, fields)
         notification("Deleted book from database")
+        navigate("/")
       }
     } catch (error) {
       notification(error.message.toString())
@@ -68,7 +58,7 @@ const Book = ({ book }) => {
       <BookDiv>
         <BookDetails>
           <h2><BookItem book={book}/></h2>
-          <Average>Average rating: <AverageRating book={book}/> {book.reviews.length > 0 ? book.reviews.length + " / " : "No "} {book.reviews.length === 1 ? " review" : "reviews"}</Average>
+          <Average>Average rating: <AverageRating bookReviews={bookReviews}/> {bookReviews.length > 0 ? bookReviews.length + " / " : "No "} {bookReviews.length === 1 ? " review" : "reviews"}</Average>
           <p>{book.description}</p>
           <p>Published: {book.publishedDate}</p>
           <p>ISBN: {book.isbn}</p>
@@ -76,12 +66,12 @@ const Book = ({ book }) => {
           <Favorite book={book}/>
           {user && book.user.displayName === username && <StyledButton onClick={deleteBook} aria-label="Delete Book"><FontAwesomeIcon icon={faTrash}/></StyledButton>}
           <h3>Reviews</h3>
-          {book.reviews && book.reviews.map((review, index) => <Review key={index} review={review} book={book}/>)}
-          {book.reviews.length === 0 && "No reviews"}
+          {bookReviews.length === 0 && "No reviews"}
+          {bookReviews.map((review, index) => <Review key={index} review={review} book={book}/>)}
         </BookDetails>
         {book.image && <BookImage src={converLink(book.image)} alt='book'/>}
       </BookDiv>
-      {user && <AddReviewForm book={book} />}
+      {user && <AddReviewForm book={book} bookReviews={bookReviews} />}
       <GoBack/>
     </>
   )

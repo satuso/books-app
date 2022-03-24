@@ -48,6 +48,10 @@ export const LoggedIn = styled(NavLink)`
   transition: .3s;
 `
 
+export const HomePageImage = styled.img`
+  width: 100%;
+`
+
 export const Wrapper = styled.div`
   text-align: center;
 `

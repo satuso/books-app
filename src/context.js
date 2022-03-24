@@ -16,6 +16,7 @@ export const ContextProvider = ({ children }) => {
 
   const [users, setUsers] = useState(null)
   const [books, setBooks] = useState([])
+  const [reviews, setReviews] = useState([])
   const [userMatch, setUserMatch] = useState([])
 
   useEffect(() => {
@@ -36,6 +37,17 @@ export const ContextProvider = ({ children }) => {
       })
     }
     getBooks()
+  }, [])
+
+  
+  useEffect(() => {
+    const getReviews = () => {
+      onSnapshot(collection(db, "reviews"), res => {
+        const data = res.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+        setReviews(data)
+      })
+    }
+    getReviews()
   }, [])
 
   useEffect(() =>{
@@ -62,6 +74,6 @@ export const ContextProvider = ({ children }) => {
   }
 
   return (
-    <Context.Provider value={{ user, users, books, userMatch, message, notification }}>{children}</Context.Provider>
+    <Context.Provider value={{ user, users, books, reviews, userMatch, message, notification }}>{children}</Context.Provider>
   )
 }

@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react"
-import { doc, updateDoc, arrayUnion } from "firebase/firestore"
+import { addDoc, collection } from "firebase/firestore"
 import { db } from "../config"
 import { Context } from "../context"
 import { ReviewDiv, Input, Button } from "../theme"
 
-const ReviewForm = ({ book }) => {
+const ReviewForm = ({ book, bookReviews }) => {
   const [newReview, setNewReview] = useState("")
   const [newRating, setNewRating] = useState(0)
 
@@ -20,30 +20,21 @@ const ReviewForm = ({ book }) => {
   const addReview = async (e) => {
     e.preventDefault()
     try {
-      const bookDoc = doc(db, "books", book.id)
-      const userDoc = doc(db, "users", user.uid)
-      if (book.reviews?.find(review => review.user === user.displayName)){
+      if (bookReviews?.find(review => review.username === user.displayName)){
         notification("You have already reviewed this book")
       } else {
         if (newRating > 0 && newRating <= 5){
-          const reviewObject = {
-            user: user.displayName, 
-            review: newReview,
+          await addDoc(collection(db, "reviews"), {
+            username: user.displayName,
+            userId: user.uid,
+            content: newReview,
             rating: newRating,
-            date: convertDate(new Date().toISOString()),
-            book: {
-              id: book.id,
-              title: book.title,
-              authors: book.authors,
-              categories: book.categories
-            },
-            id: book.id
-          }
-          const reviewFields = {
-            reviews: arrayUnion(reviewObject)
-          }
-          await updateDoc(bookDoc, reviewFields)
-          await updateDoc(userDoc, reviewFields)
+            bookId: book.id,
+            title: book.title,
+            authors: book.authors,
+            categories: book.categories,
+            date: convertDate(new Date().toISOString())
+          })
           notification("Added book review")
         } else {
           notification("Please select rating")
