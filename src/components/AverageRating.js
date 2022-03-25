@@ -11,7 +11,9 @@ const AverageRating = ({ bookReviews }) => {
     }
   }
   return (
-    <Star>{getAverage()}</Star>
+    <>
+      <Star>{getAverage()}</Star>{bookReviews.length > 0 ?  " / " + bookReviews.length : "No "} {bookReviews.length === 1 ? " review" : " reviews"}
+    </>
   )
 }
 export default AverageRating

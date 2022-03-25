@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react"
 import { addDoc, collection } from "firebase/firestore"
 import { db } from "../config"
 import { Context } from "../context"
-import { ReviewDiv, Textarea, Button } from "../theme"
+import { Textarea, Button } from "../theme"
 
 const ReviewForm = ({ book, bookReviews }) => {
   const [newReview, setNewReview] = useState("")
@@ -36,6 +36,8 @@ const ReviewForm = ({ book, bookReviews }) => {
             date: convertDate(new Date().toISOString())
           })
           notification("Added book review")
+          setNewReview("")
+          setNewRating(0)
         } else {
           notification("Please select rating")
         }
@@ -46,35 +48,33 @@ const ReviewForm = ({ book, bookReviews }) => {
   }
 
   return (
-    <ReviewDiv>
-      <form onSubmit={addReview}>
-        <h3>Review Book</h3>
-        <Textarea
-          type="text"
-          placeholder="Review"
-          value={newReview}
-          onChange={({target}) => setNewReview(target.value)}
-          minLength={1}
-          maxLength={1000}
-          required
-        /><br/>
-        <label htmlFor="rating">Rating: </label>
-        <select 
-          name="rating" 
-          id="rating"  
-          value={newRating} 
-          onChange={({target}) => setNewRating(target.value)}
-        >
-          <option value="">Select Rating</option>
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-          <option value={5}>5</option>
-        </select><br/>
-        <Button type='submit'>Submit</Button>
-      </form>
-    </ReviewDiv>
+    <form onSubmit={addReview}>
+      <h3>Review Book</h3>
+      <label htmlFor="rating">Rating: </label>
+      <select
+        name="rating" 
+        id="rating"  
+        value={newRating} 
+        onChange={({target}) => setNewRating(target.value)}
+      >
+        <option value="">Select Rating</option>
+        <option value={1}>1/5 ★</option>
+        <option value={2}>2/5 ★★</option>
+        <option value={3}>3/5 ★★★</option>
+        <option value={4}>4/5 ★★★★</option>
+        <option value={5}>5/5 ★★★★★</option>
+      </select><br/>
+      <Textarea
+        type="text"
+        placeholder="Review"
+        value={newReview}
+        onChange={({target}) => setNewReview(target.value)}
+        minLength={1}
+        maxLength={1000}
+        required
+      /><br/>
+      <Button type='submit'>Submit</Button>
+    </form>
   )
 }
 

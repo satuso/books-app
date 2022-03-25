@@ -8,9 +8,9 @@ const Categories = ({ books }) => {
   const categories = [...new Set(list)].sort()
 
   return (
-    <>
-      {categories.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}><p>{category}</p></StyledLink>)}
-    </>
+    <ul>
+      {categories.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}><li>{category}</li></StyledLink>)}
+    </ul>
   )
 }
 

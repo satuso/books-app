@@ -50,6 +50,12 @@ export const LoggedIn = styled(NavLink)`
   font-weight: bold;
   text-decoration: none;
   transition: .3s;
+  &.active {
+    color: teal;
+  }
+  &:hover {
+    color: teal;
+  }
 `
 
 export const HomePageImage = styled.img`
@@ -64,18 +70,25 @@ export const Form = styled.form`
   text-align: center;
 `
 
+export const EditForm = styled.form`
+  text-align: left;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  padding-left: 10px;
+  margin: 5px 10px 10px 5px;
+`
+
 export const Input = styled.input`
   outline: none;
-  padding: 0.8em;
-  margin-bottom: 0.5em;
+  padding: 0.6em 1em;
+  margin: 0px 5px 5px 0px;
   color: tomato;
   background: white;
-  font-family: Arial, sans-serif;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: .8rem;
   border: 1px solid whitesmoke;
   border-radius: 10px;
   width: 300px;
-  letter-spacing: 1px;
-  font-weight: bold;
   transition: .3s;
 
   &:hover {
@@ -85,17 +98,18 @@ export const Input = styled.input`
 
 export const Textarea = styled.textarea`
   outline: none;
-  padding: 0.8em;
-  margin-bottom: 0.5em;
+  padding: 0.6em 1em;
+  margin-top: 5px;
   color: tomato;
   background: white;
-  font-family: Arial, sans-serif;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: .8rem;
   border: 1px solid whitesmoke;
   border-radius: 10px;
   width: 300px;
-  letter-spacing: 1px;
-  font-weight: bold;
   transition: .3s;
+  width: 100%;
+  height: 80px;
 
   &:hover {
     border-color: lightgray;
@@ -108,15 +122,15 @@ export const Button = styled.button`
   border-radius: 10px;
   border: none;
   color: black;
-  font-family: Arial, sans-serif;
-  padding: 0.7em 1.1em;
-  margin: .5em 0 .5em 0;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: .8rem;
+  padding: 0.6em 1em;
+  margin: 2px 0px 2px 0px;
   text-transform: uppercase;
-  font-weight: bold;
   transition: .3s;
 
   &:hover {
-    background-color: dodgerblue;
+    background-color: gray;
     color: white;
   }
 `
@@ -125,16 +139,17 @@ export const DeleteButton = styled.button`
   background: tomato;
   border-radius: 10px;
   border: none;
-  color: black;
-  font-family: Arial, sans-serif;
+  color: whitesmoke;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: .8rem;
   padding: 0.6em 1em;
-  margin: .5em 0 .5em 0;
+  margin: 2px 0px 2px 0px;
   text-transform: uppercase;
-  font-weight: bold;
   transition: .3s;
 
   &:hover {
     background-color: gold;
+    color: black;
   }
 `
 
@@ -153,11 +168,12 @@ export const FavoriteButton = styled.button`
 `
 export const SortButton = styled.span`
   cursor: pointer;
-  background-color: transparent;
-  border: none;
-  color: gray;
+  background-color: whitesmoke;
+  padding: 5px;
+  border-radius: 10px;
+  color: black;
   font-size: .8rem;
-  margin-right: 10px;
+  margin: 10px 10px 10px 0px;
   transition: .3s;
 
   &:hover {
@@ -180,32 +196,47 @@ export const StyledButton = styled.span`
   }
 `
 
-export const EditLink = styled(Link)`
-  cursor: pointer;
-  background-color: transparent;
-  border-radius: 3px;
-  border: none;
-  color: gray;
-  font-size: 1.2rem;
-  margin-right: 10px;
-
-  &:hover {
-    color: dodgerblue;
-  }
-`
-
 export const Star = styled.span`
   color: gold;
+`
+
+export const BookTitle = styled.h3`
+  margin: 0;
+  padding: 0;
+`
+
+export const BookText = styled.p`
+  margin: 0;
+  padding: 0;
+  line-height: 1;
 `
 
 export const BookDiv = styled.div`
   color: #262626;
   text-decoration: none;
-  padding: 10px;
   display: flex;
   flex-align: center;
   justify-content: space-between;
+  background-color: whitesmoke;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   margin: 0;
+  width: 100%;
+`
+
+export const BookDivBottom = styled.div`
+  color: #262626;
+  text-decoration: none;
+  display: flex;
+  flex-align: center;
+  justify-content: space-between;
+  background-color: whitesmoke;
+  padding: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin: 0;
+  width: 100%;
 `
 
 export const BookDetails = styled.div`
@@ -225,7 +256,7 @@ export const StyledLink = styled(Link)`
   transition: .3s;
 
   &:hover {
-    color: dodgerblue;
+    color: teal;
   }
 `
 
@@ -235,6 +266,7 @@ export const UserDiv = styled.div`
 
 export const Gray = styled.span`
   color: gray;
+  font-weight: normal;
 `
 
 export const UserLinkWrapper = styled.div`
@@ -277,26 +309,20 @@ export const StyledNavLink = styled(NavLink)`
   }
 `
 
-export const TextLink = styled.h3`
-  cursor: pointer;
-  
-  &:hover {
-    color: dodgerblue;
-  }
-`
-
 export const ReviewDiv = styled.div`
   color: #262626;
   text-decoration: none;
-  padding-left: 10px;
-  margin-top: 0;
+  margin: 0;
+  padding: 10px;
 `
 
 export const ReviewText = styled.span`
+  font-size: .9rem;
   white-space: pre-wrap;
   display: block;
   margin: 0;
   padding: 0;
+  margin-bottom: 10px;
 `
 
 export const FooterWrapper = styled.div`

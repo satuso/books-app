@@ -23,9 +23,7 @@ const Review = ({ review }) => {
   }
 
   return (
-    <>
-      <p><StyledLink key={review.user} to={`/users/${review.username}`}>{review.username}</StyledLink>: <Gray><Rating review={review}/> {review.date} {user && review.username === username && <StyledButton onClick={deleteReview}><FontAwesomeIcon icon={faTrash}/></StyledButton>}</Gray> <ReviewText>{review.content}</ReviewText></p>
-    </>
+    <ReviewText><StyledLink key={review.user} to={`/users/${review.username}`}>{review.username}</StyledLink>: <Gray><Rating review={review}/> {review.date} {user && review.username === username && <StyledButton onClick={deleteReview}><FontAwesomeIcon icon={faTrash}/></StyledButton>}</Gray> <ReviewText>{review.content}</ReviewText></ReviewText>
   )
 }
 

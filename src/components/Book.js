@@ -12,7 +12,7 @@ import Review from "./Review"
 import BookItem from "./BookItem"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
-import { BookDiv, BookDetails, StyledButton, Gray, StyledLink, BookImage } from "../theme"
+import { BookDiv, BookDetails, StyledButton, Gray, StyledLink, BookImage, BookTitle, ReviewDiv, BookDivBottom } from "../theme"
 
 const Book = ({ book }) => {
   const { user } = useContext(Context)
@@ -53,21 +53,25 @@ const Book = ({ book }) => {
     <>
       <BookDiv>
         <BookDetails>
-          <h2><BookItem book={book}/></h2>
-          <Gray>Average rating: <AverageRating bookReviews={bookReviews}/> {bookReviews.length > 0 ?  " / " + bookReviews.length : "No "} {bookReviews.length === 1 ? " review" : " reviews"}</Gray>
+          <BookTitle><BookItem book={book}/></BookTitle>
+          <Gray>Average rating: <AverageRating bookReviews={bookReviews}/></Gray>
           <p>{book.description}</p>
           <p>Published: {book.publishedDate}</p>
           <p>ISBN: {book.isbn}</p>
           <p>Category: {book.categories?.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}>{category}</StyledLink>)}</p>
-          <Favorite book={book}/>
-          {user && book.user.displayName === username && <StyledButton onClick={deleteBook} aria-label="Delete Book"><FontAwesomeIcon icon={faTrash}/></StyledButton>}
-          <h3>Reviews</h3>
-          {bookReviews.length === 0 && "No reviews"}
-          {bookReviews.map((review, index) => <Review key={index} review={review} book={book}/>)}
         </BookDetails>
         {book.image && <BookImage src={book.image} alt={book.title}/>}
       </BookDiv>
-      {user && <AddReviewForm book={book} bookReviews={bookReviews} />}
+      <BookDivBottom>
+        <div><Favorite book={book}/></div>
+        {user && book.user.displayName === username && <StyledButton onClick={deleteBook} aria-label="Delete Book"><FontAwesomeIcon icon={faTrash}/></StyledButton>}
+      </BookDivBottom>
+      <ReviewDiv>
+        {user && <AddReviewForm book={book} bookReviews={bookReviews} />}
+        <h3>Reviews</h3>
+        {bookReviews.length === 0 && "No reviews"}
+        {bookReviews.map((review, index) => <Review key={index} review={review} book={book}/>)}
+      </ReviewDiv>
       <GoBack/>
     </>
   )

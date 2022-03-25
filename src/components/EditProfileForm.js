@@ -1,11 +1,11 @@
 import React, { useState, useContext }  from "react"
 import { Context } from "../context"
 import { useNavigate } from "react-router-dom"
-import { getAuth, updateEmail, updatePassword } from "firebase/auth"
+import { getAuth, updateEmail, updatePassword, deleteUser } from "firebase/auth"
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"
-import { doc, updateDoc } from "firebase/firestore"
+import { doc, updateDoc, deleteDoc } from "firebase/firestore"
 import { db } from "../config"
-import { Form, Input, Button, DeleteButton } from "../theme"
+import { Input, Button, DeleteButton, EditForm, Wrapper } from "../theme"
 
 const EditProfileForm = ({ user }) => {
   const [newEmail, setNewEmail] = useState("")
@@ -15,8 +15,12 @@ const EditProfileForm = ({ user }) => {
   const [image, setImage] = useState("")
 
   const { notification } = useContext(Context)
+  const { reviews } = useContext(Context)
 
+  const userReviews = reviews.filter(review => review.userId === user.id)
+  
   const auth = getAuth()
+  const loggedInUser = auth.currentUser
   const navigate = useNavigate()
 
   const changeEmail = async (e) => {
@@ -85,11 +89,12 @@ const EditProfileForm = ({ user }) => {
       const storage = getStorage()
       const storageRef = ref(storage, "blank_avatar.png")
       const avatarRef = ref(storage, user.uid)
-      deleteObject(avatarRef).then(() => {
-        notification("Image deleted!")
-      }).catch((error) => {
-        notification(error.message.toString())
-      })
+      deleteObject(avatarRef)
+        .then(() => {
+          notification("Image deleted!")
+        }).catch((error) => {
+          notification(error.message.toString())
+        })
       getDownloadURL(storageRef).then((url) => {
         const newFields = {
           photoURL: url
@@ -104,10 +109,27 @@ const EditProfileForm = ({ user }) => {
     }
   }
 
+  const removeUser = () => {
+    const storage = getStorage()
+    const avatarRef = ref(storage, loggedInUser.uid)
+    deleteObject(avatarRef)
+    deleteUser(loggedInUser)
+      .then(() => {
+        userReviews.forEach(element => deleteDoc(doc(db, "reviews", element.id)))
+        deleteDoc(doc(db, "users", user.id))
+        notification("Deleted user successfully")
+        navigate("/")
+      })
+      .catch((error) => {
+        notification(error.message.toString())
+      })
+  }
+
   return (
-    <>
-      <Form onSubmit={changeEmail}>
-        <h3>Change Email</h3>
+    <Wrapper>
+      <h3>Edit Profile</h3>
+      <EditForm onSubmit={changeEmail}>
+        <h4>Change Email</h4>
         <Input
           type="email"
           placeholder="Email"
@@ -116,9 +138,9 @@ const EditProfileForm = ({ user }) => {
           required
         />
         <Button type='submit'>Submit</Button>
-      </Form>
-      <Form onSubmit={changePassword}>
-        <h3>Change Password</h3>
+      </EditForm>
+      <EditForm onSubmit={changePassword}>
+        <h4>Change Password</h4>
         <Input
           type="password"
           placeholder="Password"
@@ -128,21 +150,22 @@ const EditProfileForm = ({ user }) => {
           required
         />
         <Button type='submit'>Submit</Button>
-      </Form>
-      <Form onSubmit={uploadImage}>
-        <h3>Upload Image</h3>
+      </EditForm>
+      <EditForm onSubmit={uploadImage}>
+        <h4>Upload Avatar</h4>
         <Input
           type="file"
           onChange={({target}) => setImage(target.files[0])}
           required
         />
         <Button type='submit'>Submit</Button>
-      </Form>
-      <Form onSubmit={deleteImage}>
-        <DeleteButton type='submit'>Delete Image</DeleteButton>
-      </Form>
-      <Form onSubmit={updateProfile}>
-        <h3>Update Profile Details</h3>
+      </EditForm>
+      <EditForm onSubmit={deleteImage}>
+        <h4>Delete Avatar</h4>
+        <DeleteButton type='submit'>Delete Avatar</DeleteButton>
+      </EditForm>
+      <EditForm onSubmit={updateProfile}>
+        <h4>Update Profile Details</h4>
         <Input
           type="text"
           placeholder="Name"
@@ -156,8 +179,13 @@ const EditProfileForm = ({ user }) => {
           onChange={({target}) => setNewDateOfBirth(target.value)}
         /><br/>
         <Button type='submit'>Submit</Button>
-      </Form>
-    </>
+      </EditForm>
+      <EditForm onSubmit={removeUser}>
+        <h4>Delete account</h4>
+        <p>This permanently deletes your account</p>
+        <DeleteButton type='submit'>Delete Account</DeleteButton>
+      </EditForm>
+    </Wrapper>
   )
 }
 

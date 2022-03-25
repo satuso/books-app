@@ -41,6 +41,7 @@ const AddBookForm = () => {
   const submitSearch = (e) => {
     e.preventDefault()
     setFilter(search)
+    setSearch("")
   }
 
   const convertLink = (link) => {

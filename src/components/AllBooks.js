@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react"
 import { Context } from "../context.js"
 import BookItem from "./BookItem"
-import { StyledLink, SortButton } from "../theme"
+import AverageRating from "./AverageRating"
+import { StyledLink, SortButton, Gray } from "../theme"
 
 const AllBooks = () => {
   const { books } = useContext(Context)
+  const { reviews } = useContext(Context)
 
   const [allBooks, setAllBooks] = useState(books)
   const [toggle, setToggle] = useState(false)
@@ -55,7 +57,10 @@ const AllBooks = () => {
       <SortButton onClick={sortByTitle}>Sort by Title</SortButton>
       <SortButton onClick={sortByYear}>Sort by Year</SortButton>
       <SortButton onClick={unsort}>Unsort</SortButton>
-      {allBooks.map(book => <StyledLink key={book.id} to={`/books/${book.id}`}><p><BookItem book={book}/></p></StyledLink>)}
+      <ul>
+        {allBooks.map(book => <StyledLink key={book.id} to={`/books/${book.id}`}><li><BookItem book={book}/> <Gray><AverageRating bookReviews={reviews.filter(review => review.bookId === book.id)}/></Gray></li></StyledLink>)}
+      </ul>
+      <p>Total: {books.length} {books.length === 1 ? "book" : "books"} / {reviews.length} {reviews.length === 1 ? "review" : "reviews"}</p>
     </div>
   )
 }

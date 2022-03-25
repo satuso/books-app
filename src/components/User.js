@@ -1,16 +1,13 @@
 import React, { useState, useContext }  from "react"
 import { Context } from "../context"
 import { useNavigate } from "react-router-dom"
-import { doc, deleteDoc } from "firebase/firestore"
-import { getAuth, deleteUser, reauthenticateWithCredential, EmailAuthProvider} from "firebase/auth"
-import { getStorage, ref, deleteObject } from "firebase/storage"
-import { db } from "../config"
+import { getAuth, reauthenticateWithCredential, EmailAuthProvider} from "firebase/auth"
 import Favorite from "./Favorite"
 import BookItem from "./BookItem"
 import Rating from "./Rating"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons"
-import { StyledLink, UserDiv, StyledButton, EditLink, Avatar, Wrapper, Form, Input, Button } from "../theme"
+import { faPen } from "@fortawesome/free-solid-svg-icons"
+import { StyledLink, UserDiv, StyledButton, Avatar, Wrapper, Form, Input, Button } from "../theme"
 
 const User = ({ user }) => {
   const [password, setPassword] = useState("")
@@ -24,7 +21,7 @@ const User = ({ user }) => {
   const navigate = useNavigate()
   const auth = getAuth()
   const loggedInUser = auth.currentUser
-  
+
   const handleAuth = async (e) => {
     e.preventDefault()
     const credential = EmailAuthProvider.credential(
@@ -34,23 +31,7 @@ const User = ({ user }) => {
     reauthenticateWithCredential(loggedInUser, credential)
       .then(() => {
         setToggle(false)
-        removeUser()
-      })
-      .catch((error) => {
-        notification(error.message.toString())
-      })
-  }
-
-  const removeUser = () => {
-    const storage = getStorage()
-    const avatarRef = ref(storage, loggedInUser.uid)
-    deleteObject(avatarRef)
-    deleteUser(loggedInUser)
-      .then(() => {
-        userReviews.forEach(element => deleteDoc(doc(db, "reviews", element.id)))
-        deleteDoc(doc(db, "users", user.id))
-        notification("Deleted user successfully")
-        navigate("/")
+        navigate(`/${user.displayName}/editprofile`)
       })
       .catch((error) => {
         notification(error.message.toString())
@@ -68,31 +49,30 @@ const User = ({ user }) => {
         <p>{user.dateOfBirth}</p>
         {loggedInUser && user.displayName === loggedInUser.displayName &&<p>{loggedInUser.email}</p>}
       </Wrapper>
-      <p>Favorites:</p>
-      <ul>
-        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.id}><StyledLink to={`/books/${favorite.id}`}><BookItem book={favorite}/></StyledLink><Favorite book={favorite}/></li>) : "No favorites"} 
-      </ul>
+      {loggedInUser && user.displayName === loggedInUser.displayName &&
+      <><p>Favorites:</p><ul>
+        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.id}><StyledLink to={`/books/${favorite.id}`}><BookItem book={favorite} /></StyledLink><Favorite book={favorite} /></li>) : "No favorites"}
+      </ul></>}
       <p>Reviews:</p>
       <ul>
         {userReviews.length > 0 ? userReviews.map(review => <li key={review.bookId}><StyledLink to={`/books/${review.bookId}`}><BookItem book={review}/></StyledLink> <Rating review={review}/></li>) : "No reviews"}
       </ul>
       {loggedInUser && user.displayName === loggedInUser.displayName &&
       <Wrapper>
-        <EditLink to={`/${user.displayName}/editprofile`} aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
-        <StyledButton onClick={() => setToggle(true)} aria-label="Delete profile"><FontAwesomeIcon icon={faTrash}/></StyledButton>
+        <StyledButton onClick={() => setToggle(!toggle)} aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></StyledButton>
       </Wrapper>
       }
       {toggle &&
       <Form onSubmit={handleAuth}>
-        <h2>Delete account</h2>
-        <p>Please provide your password to permanently delete your account</p>
+        <h2>Re-authenticate</h2>
+        <p>Please provide your password before you can access settings</p>
         <Input
           type="password"
           placeholder="Password"
           value={password}
           onChange={({target}) => setPassword(target.value)}
         /><br/>
-        <Button type='submit'>Delete account</Button>
+        <Button type='submit'>Submit</Button>
       </Form>}
     </UserDiv>
   )
