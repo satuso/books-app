@@ -1,7 +1,8 @@
 export const replacePath = (path) => {
   if (path.length > 0){
     return path.replaceAll(" ", "-")
-  } else {
+  }
+  if (path.length === 0){
     return path.replace(" ", "-")
   }
 }

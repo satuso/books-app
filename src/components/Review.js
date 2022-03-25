@@ -5,7 +5,7 @@ import { db } from "../config"
 import { Context } from "../context"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
-import { Small, StyledLink, StyledButton } from "../theme"
+import { Gray, StyledLink, StyledButton, ReviewText } from "../theme"
 
 const Review = ({ review }) => {
   const { user } = useContext(Context)
@@ -23,7 +23,9 @@ const Review = ({ review }) => {
   }
 
   return (
-    <p><StyledLink key={review.user} to={`/users/${review.username}`}>{review.username}</StyledLink>: {review.content} <Small><Rating review={review}/> {review.date} {user && review.username === username && <StyledButton onClick={deleteReview}><FontAwesomeIcon icon={faTrash}/></StyledButton>}</Small></p>
+    <>
+      <p><StyledLink key={review.user} to={`/users/${review.username}`}>{review.username}</StyledLink>: <Gray><Rating review={review}/> {review.date} {user && review.username === username && <StyledButton onClick={deleteReview}><FontAwesomeIcon icon={faTrash}/></StyledButton>}</Gray> <ReviewText>{review.content}</ReviewText></p>
+    </>
   )
 }
 

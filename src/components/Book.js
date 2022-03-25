@@ -12,7 +12,7 @@ import Review from "./Review"
 import BookItem from "./BookItem"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
-import { BookDiv, BookDetails, StyledButton, Average, StyledLink, BookImage } from "../theme"
+import { BookDiv, BookDetails, StyledButton, Gray, StyledLink, BookImage } from "../theme"
 
 const Book = ({ book }) => {
   const { user } = useContext(Context)
@@ -47,10 +47,6 @@ const Book = ({ book }) => {
     }
   }
 
-  const convertLink = (link) => {
-    return link.replace("http", "https")
-  }
-
   if (!book) return null
 
   return (
@@ -58,7 +54,7 @@ const Book = ({ book }) => {
       <BookDiv>
         <BookDetails>
           <h2><BookItem book={book}/></h2>
-          <Average>Average rating: <AverageRating bookReviews={bookReviews}/> {bookReviews.length > 0 ? bookReviews.length + " / " : "No "} {bookReviews.length === 1 ? " review" : "reviews"}</Average>
+          <Gray>Average rating: <AverageRating bookReviews={bookReviews}/> {bookReviews.length > 0 ?  " / " + bookReviews.length : "No "} {bookReviews.length === 1 ? " review" : " reviews"}</Gray>
           <p>{book.description}</p>
           <p>Published: {book.publishedDate}</p>
           <p>ISBN: {book.isbn}</p>
@@ -69,7 +65,7 @@ const Book = ({ book }) => {
           {bookReviews.length === 0 && "No reviews"}
           {bookReviews.map((review, index) => <Review key={index} review={review} book={book}/>)}
         </BookDetails>
-        {book.image && <BookImage src={convertLink(book.image)} alt='book'/>}
+        {book.image && <BookImage src={book.image} alt={book.title}/>}
       </BookDiv>
       {user && <AddReviewForm book={book} bookReviews={bookReviews} />}
       <GoBack/>

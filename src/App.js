@@ -15,9 +15,9 @@ import User from "./components/User"
 import AddBookForm from "./components/AddBookForm"
 import EditProfileForm from "./components/EditProfileForm"
 import Category from "./components/Category"
+import NotFoundPage from "./components/NotFoundPage"
 import { replacePath } from "./helpers"
 import { Container, PageWrapper, Notification } from "./theme"
-import NotFoundPage from "./components/NotFoundPage"
 
 const App = () => {
   const { books } = useContext(Context)
@@ -39,10 +39,10 @@ const App = () => {
           <Route path="/addbook" element={<AddBookForm />}></Route>
           <Route path="/search" element={<Search />}></Route>
           <Route path="/users" element={<Users />}></Route>
-          {books.map(book => <Route key={book.id} path={`/categories/:category/${book.id}`} element={<Book book={book}/>}></Route>)}
+          {books.map(book => <Route key={book.id} path={`/books/${book.id}`} element={<Book book={book}/>}></Route>)}
           {books?.map(book => book.categories?.map(category => <Route key={book.id} path={`/categories/${replacePath(category)}`} element={<Category category={category}/>}></Route>))}
           {users && users.map(user => <Route key={user.id} path={`/users/${user.displayName}`} element={<User user={user}/>}></Route>)}
-          {user && <Route path={`/${user.displayName}/edit-profile`} element={<EditProfileForm user={user}/>}></Route>}
+          {user && <Route path={`/${user.displayName}/editprofile`} element={<EditProfileForm user={user}/>}></Route>}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </PageWrapper>

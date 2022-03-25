@@ -40,7 +40,7 @@ const Search = () => {
       {filter && <h3>Search Results</h3>}
       {(filteredBooks.length === 0 && filter) && "No results"}
       {filteredBooks.map(book => 
-        <p key={book.id}><StyledLink to={`/categories/${book.categories}/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></StyledLink></p>
+        <p key={book.id}><StyledLink to={`/books/${book.id}`}><BookItem book={book}/><AverageRating book={book}/></StyledLink></p>
       )}
     </>
   )

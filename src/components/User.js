@@ -70,15 +70,15 @@ const User = ({ user }) => {
       </Wrapper>
       <p>Favorites:</p>
       <ul>
-        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.id}><StyledLink to={`/categories/${favorite.categories}/${favorite.id}`}><BookItem book={favorite}/></StyledLink><Favorite book={favorite}/></li>) : "No favorites"} 
+        {user.favorites.length > 0 ? user.favorites.map(favorite => <li key={favorite.id}><StyledLink to={`/books/${favorite.id}`}><BookItem book={favorite}/></StyledLink><Favorite book={favorite}/></li>) : "No favorites"} 
       </ul>
       <p>Reviews:</p>
       <ul>
-        {userReviews.length > 0 ? userReviews.map(review => <li key={review.bookId}><StyledLink to={`/categories/${review.categories}/${review.bookId}`}><BookItem book={review}/></StyledLink> <Rating review={review}/></li>) : "No reviews"}
+        {userReviews.length > 0 ? userReviews.map(review => <li key={review.bookId}><StyledLink to={`/books/${review.bookId}`}><BookItem book={review}/></StyledLink> <Rating review={review}/></li>) : "No reviews"}
       </ul>
       {loggedInUser && user.displayName === loggedInUser.displayName &&
       <Wrapper>
-        <EditLink to={`/${user.displayName}/edit-profile`} aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
+        <EditLink to={`/${user.displayName}/editprofile`} aria-label="Edit profile"><FontAwesomeIcon icon={faPen} /></EditLink>
         <StyledButton onClick={() => setToggle(true)} aria-label="Delete profile"><FontAwesomeIcon icon={faTrash}/></StyledButton>
       </Wrapper>
       }

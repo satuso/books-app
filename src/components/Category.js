@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
 import { Context } from "../context"
-import AverageRating from "./AverageRating"
 import BookItem from "./BookItem"
 import GoBack from "./GoBack"
 import { StyledLink } from "../theme"
@@ -11,7 +10,7 @@ const Category = ({ category }) => {
   return (
     <>
       <h2>Books in {category}</h2>
-      {filteredBooks.map(book => <StyledLink key={book.id} to={`${book.id}`}><p><BookItem book={book}/> <AverageRating book={book}/></p></StyledLink>)}
+      {filteredBooks.map(book => <StyledLink key={book.id} to={`/books/${book.id}`}><p><BookItem book={book}/></p></StyledLink>)}
       <GoBack />
     </>
   )

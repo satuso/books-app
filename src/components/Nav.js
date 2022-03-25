@@ -8,6 +8,7 @@ const Nav = () => {
   return (
     <Navbar>
       <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/books'>Books</StyledNavLink>
+      <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/search'>Search</StyledNavLink>
       {user &&
         <StyledNavLink className={({ isActive }) => (isActive ? "active" : "inactive")} to='/addbook'>Add Book</StyledNavLink>
       }

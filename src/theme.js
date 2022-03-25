@@ -41,6 +41,10 @@ export const StyledHeaderLink = styled(Link)`
   text-decoration: none;
 `
 
+export const HeaderLinkWrapper = styled.div`
+  margin-right: 20px;
+`
+
 export const LoggedIn = styled(NavLink)`
   color: #262626;
   font-weight: bold;
@@ -147,14 +151,27 @@ export const FavoriteButton = styled.button`
     color: dodgerblue;
   }
 `
-
-export const StyledButton = styled.button`
+export const SortButton = styled.span`
   cursor: pointer;
   background-color: transparent;
-  border-radius: 3px;
+  border: none;
+  color: gray;
+  font-size: .8rem;
+  margin-right: 10px;
+  transition: .3s;
+
+  &:hover {
+    color: dodgerblue;
+  }
+`
+
+export const StyledButton = styled.span`
+  cursor: pointer;
+  background-color: transparent;
   border: none;
   color: gray;
   font-size: 1.2rem;
+  font-weight: bold;
   margin-right: 10px;
   transition: .3s;
 
@@ -196,11 +213,6 @@ export const BookDetails = styled.div`
   padding: 0;
 `
 
-export const Average = styled.p`
-  color: gray;
-  font-size: 1rem;
-`
-
 export const BookImage = styled.img`
   height: 200px;
   padding: 2em;
@@ -221,7 +233,7 @@ export const UserDiv = styled.div`
   color: #262626;
 `
 
-export const Small = styled.span`
+export const Gray = styled.span`
   color: gray;
 `
 
@@ -265,11 +277,26 @@ export const StyledNavLink = styled(NavLink)`
   }
 `
 
+export const TextLink = styled.h3`
+  cursor: pointer;
+  
+  &:hover {
+    color: dodgerblue;
+  }
+`
+
 export const ReviewDiv = styled.div`
   color: #262626;
   text-decoration: none;
   padding-left: 10px;
   margin-top: 0;
+`
+
+export const ReviewText = styled.span`
+  white-space: pre-wrap;
+  display: block;
+  margin: 0;
+  padding: 0;
 `
 
 export const FooterWrapper = styled.div`

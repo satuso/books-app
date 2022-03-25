@@ -43,6 +43,10 @@ const AddBookForm = () => {
     setFilter(search)
   }
 
+  const convertLink = (link) => {
+    return link.replace("http", "https")
+  }
+
   const addBook = async (index) => {
     try {
       if (books.find(book => book.isbn === bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier)){
@@ -54,7 +58,7 @@ const AddBookForm = () => {
           description: bookMatch[index]?.volumeInfo.description ? bookMatch[index]?.volumeInfo.description : "No description",
           publishedDate: bookMatch[index]?.volumeInfo.publishedDate,
           isbn: bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier ? bookMatch[index]?.volumeInfo.industryIdentifiers[0].identifier : "No ISBN",
-          image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? bookMatch[0]?.volumeInfo.imageLinks.thumbnail : null,
+          image: bookMatch[0]?.volumeInfo.imageLinks?.thumbnail ? convertLink(bookMatch[0]?.volumeInfo.imageLinks.thumbnail) : null,
           categories: bookMatch[index]?.volumeInfo.categories ? bookMatch[index]?.volumeInfo.categories : ["Uncategorized"],
           user: {
             id: user.uid,
