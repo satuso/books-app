@@ -11,7 +11,11 @@ export const PageWrapper = styled.section`
   padding: 1em;
   width: 50%;
   margin: 0 auto;
-  min-height: 55vh;
+  min-height: 50vh;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `
 export const Notification = styled.p`
   text-align: center;
@@ -206,9 +210,7 @@ export const BookTitle = styled.h3`
 `
 
 export const BookText = styled.p`
-  margin: 0;
-  padding: 0;
-  line-height: 1;
+  line-height: 1.2;
 `
 
 export const BookDiv = styled.div`
@@ -219,10 +221,14 @@ export const BookDiv = styled.div`
   justify-content: space-between;
   background-color: whitesmoke;
   padding: 10px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
   margin: 0;
   width: 100%;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 export const BookDivBottom = styled.div`
@@ -231,10 +237,6 @@ export const BookDivBottom = styled.div`
   display: flex;
   flex-align: center;
   justify-content: space-between;
-  background-color: whitesmoke;
-  padding: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
   margin: 0;
   width: 100%;
 `
@@ -247,6 +249,11 @@ export const BookDetails = styled.div`
 export const BookImage = styled.img`
   height: 200px;
   padding: 2em;
+
+  @media (max-width: 768px) {
+    width: 150px;
+    padding: 0;
+  }
 `
 
 export const StyledLink = styled(Link)`
@@ -286,6 +293,7 @@ export const SmallAvatar = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  margin: .5em;
 `
 
 export const Navbar = styled.nav`

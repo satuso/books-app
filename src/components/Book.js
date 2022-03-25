@@ -12,7 +12,7 @@ import Review from "./Review"
 import BookItem from "./BookItem"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
-import { BookDiv, BookDetails, StyledButton, Gray, StyledLink, BookImage, BookTitle, ReviewDiv, BookDivBottom } from "../theme"
+import { BookDiv, BookDetails, StyledButton, Gray, StyledLink, BookImage, BookTitle, ReviewDiv, BookDivBottom, BookText } from "../theme"
 
 const Book = ({ book }) => {
   const { user } = useContext(Context)
@@ -55,10 +55,10 @@ const Book = ({ book }) => {
         <BookDetails>
           <BookTitle><BookItem book={book}/></BookTitle>
           <Gray>Average rating: <AverageRating bookReviews={bookReviews}/></Gray>
-          <p>{book.description}</p>
-          <p>Published: {book.publishedDate}</p>
-          <p>ISBN: {book.isbn}</p>
-          <p>Category: {book.categories?.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}>{category}</StyledLink>)}</p>
+          <BookText>{book.description}</BookText>
+          <BookText>Published: {book.publishedDate}</BookText>
+          <BookText>ISBN: {book.isbn}</BookText>
+          <BookText>Category: {book.categories?.map(category => <StyledLink to={`/categories/${replacePath(category)}`} key={category}>{category}</StyledLink>)}</BookText>
         </BookDetails>
         {book.image && <BookImage src={book.image} alt={book.title}/>}
       </BookDiv>
